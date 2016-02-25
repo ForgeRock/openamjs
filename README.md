@@ -5,7 +5,8 @@ A small JavaScript wrapper to do basic REST API calls to OpenAM
 openam.js is a small library/wrapper of some of the REST APIs of OpenAM.
 The intention is to provide an easy way to integrate the calls in your Client JavaScript code without needing to implement the REST code yourself
 
-This is a work in progress
+This is a work in progress, and also a JavaScript coding exercise. 
+This is a community work and it is NOT supported NOR endorsed by ForgeRock, however if you feel it is useful, please contribute.
 
 ## Motivation
 I wanted an easy way to integrate the OpenAM REST calls in JavaScript client code.
