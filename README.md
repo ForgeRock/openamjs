@@ -5,7 +5,8 @@ A small JavaScript wrapper to do basic REST API calls to OpenAM
 openam.js is a small library/wrapper of some of the REST APIs of OpenAM.
 The intention is to provide an easy way to integrate the calls in your Client JavaScript code without needing to implement the REST code yourself
 
-This is a work in progress
+This is a work in progress, and also a JavaScript coding exercise. 
+This is a community work and it is NOT supported NOR endorsed by ForgeRock, however if you feel it is useful, please contribute.
 
 ## Motivation
 I wanted an easy way to integrate the OpenAM REST calls in JavaScript client code.
@@ -24,7 +25,7 @@ You might need to enable CORS in OpenAM, if you have a question on how to do it,
 https://forgerock.org/2015/02/openam-with-cors-is-that-a-salad-dessert-or-main-course/
 
 ## Documentation
-
+```
 // Configure the OpenAM connection
 var openam = new openamConfig(
               "http://mac.openrock.org:8080/openam", // openam base url
@@ -33,7 +34,9 @@ var openam = new openamConfig(
               ".openrock.org",                       // Domain name
               false,                                 // Is legacy enabled?
               true);                                 // Is debug enabled (messages to the java console)?
+```
 
+```
 // Redirect to authentication with Module
 openam.redirectAuthNWithModule(
         module,                         // The AuthN module to use
@@ -41,4 +44,4 @@ openam.redirectAuthNWithModule(
         goto, 
         gotoOnFail, 
         classic) 
-
+```
