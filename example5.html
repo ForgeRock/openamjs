@@ -29,10 +29,10 @@ $(document).ready(function() {
     var limodule = "linkedin";
     
     var openam = new openamConfig(
-        "http://mac.openrock.org:8080/openam", // openam base url
-        "/humans",                             // default realm
+        "http://openam1.example.com:8080/openam", // openam base url
+        "/",                             // default realm
         "iPlanetDirectoryPro",                 // Session cookie name
-        ".openrock.org",                       // Domain name 
+        ".example.com",                       // Domain name 
         false,                                 // Is legacy enabled?
         true);                                 // Is debug enabled (see java console)? 
 
@@ -97,8 +97,7 @@ $(document).ready(function() {
     
     $('form[name=loginForm]').submit(function() {
         var tokenId_ = openam.authenticate($('[name=username]').val(), 
-                                           $('[name=password]').val(), 
-                                           "/humans");
+                                           $('[name=password]').val());
         if (tokenId_) {
             window.location = thisURL;  
         } else {

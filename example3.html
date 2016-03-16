@@ -24,12 +24,12 @@
 
             // Configure the OpenAM connection
             var openam = new openamConfig(
-                    "http://mac.openrock.org:8080/openam", // openam base url
-                    "/humans",                             // default realm
-                    "iPlanetDirectoryPro",                 // Session cookie name
-                    ".openrock.org",                       // Domain name
-                    false,                                 // Is legacy enabled?
-                    true);                                 // Is debug enabled (see java console)?
+                    "http://openam1.example.com:8080/openam", // OpenAM base url
+                    "/",                                      // Default realm
+                    "iPlanetDirectoryPro",                    // Session cookie name
+                    ".example.com",                           // Domain name
+                    false,                                    // Is legacy enabled?
+                    true);                                    // Is debug enabled (see java console)?
 
             function formShow(show) {
                 show = show || false;
@@ -47,7 +47,7 @@
             function authenticateUser() {
                 var username = document.forms["loginForm"]["username"].value;
                 var password = document.forms["loginForm"]["password"].value;
-                var tokenId_ = openam.authenticate(username, password, "/humans");
+                var tokenId_ = openam.authenticate(username, password);
                 if (tokenId_) {
                     window.location = thisURL;
                 } else {

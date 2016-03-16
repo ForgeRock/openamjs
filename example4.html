@@ -23,12 +23,12 @@
 
             // Configure the OpenAM connection
             var openam = new openamConfig(
-                    "http://mac.openrock.org:8080/openam", // openam base url
-                    "/humans",                             // default realm
-                    "iPlanetDirectoryPro",                 // Session cookie name
-                    ".openrock.org",                       // Domain name
-                    false,                                 // Is legacy enabled?
-                    true);                                 // Is debug enabled (see java console)?
+                    "http://openam1.example.com:8080/openam", // openam base url
+                    "/",                                      // default realm
+                    "iPlanetDirectoryPro",                    // Session cookie name
+                    ".example.com",                           // Domain name
+                    false,                                    // Is legacy enabled?
+                    true);                                    // Is debug enabled (see java console)?
         </script>
 
         <div id="header">
@@ -49,7 +49,7 @@
 
 
         <div id="franja">
-            <!- The thin fringe/bar between header and wdw container -->
+            <!-- The thin fringe/bar between header and wdw container -->
         </div>
 
         <!-- Window container containing small windows -->
