@@ -24,7 +24,7 @@ You might need to enable CORS in OpenAM, if you have a question on how to do it,
 https://forgerock.org/2015/02/openam-with-cors-is-that-a-salad-dessert-or-main-course/
 
 ## Documentation
-
+```
 // Configure the OpenAM connection
 var openam = new openamConfig(
               "http://mac.openrock.org:8080/openam", // openam base url
@@ -32,7 +32,8 @@ var openam = new openamConfig(
               true,                                  // Is cache enabled?
               true);                                 // Is debug enabled?
 //            TO DO                                  Is legacy enabled?
-
+```
+```
 // Redirect to authentication with Module
 openam.authNRedirectModule(
         module,                         // The AuthN module to use
@@ -40,4 +41,4 @@ openam.authNRedirectModule(
         goto, 				// Goto URL after success
         gotoOnFail, 			// Goto URL if failed
         classic) 			// Classic or XUI
-
+```
