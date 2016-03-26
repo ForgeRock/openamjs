@@ -11,15 +11,17 @@
 * Header, with the fields enclosed by brackets [] replaced by your own identifying
 * information: "Portions copyright [year] [name of copyright owner]".
 *
-* Copyright 2014 ForgeRock AS.
+* Copyright 2014-2016 ForgeRock AS.
 */
 
 /* 
 * CSS used in conjunction with the utils.js 
 * Part of the examples for the openam.js
+ * Author: Identity Wrestler
+ * Notice: This is not suported/maintained by ForgeRock
 */
 
-a       {color: #474749; text-decoration: underline; }
+a {color: #474749; text-decoration: underline; }
 a.visited { color: #474749; text-decoration: none; }
 a.active { color: #FFFFFF; text-decoration: none; }
 a:hover { color: #0000FF;  text-decoration: none;
@@ -86,7 +88,6 @@ hr {
 }
 
 #franjita {
-    /* background: #eeeeee;  */
     background: #6fada0;
     border-bottom:  1px solid rgb(150, 150, 150);
     position: absolute;
