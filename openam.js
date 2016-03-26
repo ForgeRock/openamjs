@@ -34,6 +34,7 @@ var ProfileURI = "/XUI/#profile/";
 var sessionsURI = "/json/sessions";
 var authenticationURI = "/json/authenticate";
 var attributesURI = "/json/users/";
+var serverinfoURI = "/json/serverinfo/*";
 
 // OpenAM Legacy REST API URIs
 var legacyAuthenticationURI = "/identity/json/authenticate";
@@ -52,27 +53,27 @@ var authValueParam = "authIndexValue";
 // Some global variables
 var uid = null;
 
+var storageExist = ("sessionStorage" in window && window.sessionStorage);
 
-var  openWindow = function(url,o) {
-  var left  = (screen.width/2)-(900/2),
-  top   = (screen.height/2)-(600/2),
-  height = ( o.height !=null ) ? o.height : 520,
-  win = window.open ( url, "popup", "width=900, height=" + height +", top="+top+", left="+left );
-  win.focus();
-  var id = setInterval(function () {
-    try { loc = win.location.href; 
-    if (win.location.href.indexOf(url) < 0) {
-        clearInterval(id);
-        win.opener.location.replace(loc);
-        win.close();
-    }
-    } catch(ex1) {} ;
-  }, 500);
-}
-
-var closeWindow = function() {
-  window.close();
-}
+var openWindow = function (url, o) {
+    var left = (screen.width / 2) - (900 / 2);
+    var top = (screen.height / 2) - (600 / 2);
+    var height = (o.height !== null) ? o.height : 520;
+    var win = window.open(url, "win", "width=900, height=" + height + ", top=" + top + ", left=" + left);
+    win.focus();
+    var id = setInterval(function () {
+        try {
+            loc = win.location.href;
+            if (win.location.href.indexOf(url) < 0) {
+                clearInterval(id);
+                win.opener.location.replace(loc);
+                win.close();
+            } 
+        } catch (ex1) {
+            // Do nothing
+        };
+    }, 500);
+};
 
 // Gets the URL of the page running the script
 function getMyURL() {
@@ -122,35 +123,43 @@ else {
 return value;
 }
 
+
 // Functions to connect to the server using XMLHttpRequest
 // or MSoft stuff, in case is necessary
 var ajax = {};
-ajax.x = function() {
-    if (typeof XMLHttpRequest !== 'undefined') {
-        return new XMLHttpRequest();  
-    }
-    var versions = [
-        "MSXML2.XmlHttp.5.0",   
-        "MSXML2.XmlHttp.4.0",  
-        "MSXML2.XmlHttp.3.0",   
-        "MSXML2.XmlHttp.2.0",  
-        "Microsoft.XmlHttp"
-    ];
+ajax.x = function () {
+    if ('withCredentials' in new XMLHttpRequest()) {
+        console.log("XHR support");
+        return new XMLHttpRequest();
+    } else if (typeof XDomainRequest !== "undefined") {
+        console.log("XDR support");
+        return new XDomainRequest();
+    } else {
+        var versions = [
+            "MSXML2.XmlHttp.5.0",
+            "MSXML2.XmlHttp.4.0",
+            "MSXML2.XmlHttp.3.0",
+            "MSXML2.XmlHttp.2.0",
+            "Microsoft.XmlHttp"
+        ];
 
-    var xhr;
-    for(var i = 0; i < versions.length; i++) {  
-        try {  
-            xhr = new ActiveXObject(versions[i]);  
-            break;  
-        } catch (e) {
-        }  
+        var xhr;
+        for (var i = 0; i < versions.length; i++) {
+            try {
+                xhr = new ActiveXObject(versions[i]);
+                break;
+            } catch (e) {
+                console.log("ERROR when creating ActiveXObject");
+            }
+        }
+        console.log("ActiveXObject support");
+        return xhr;
     }
-    return xhr;
 };
 
 ajax.send = function(url, callback, method, data, contentType, sessionCookieName, tokenId, sync) {
     var x = ajax.x();
-    x.open(method, url, sync);
+    x.open(method, url, sync, null, null);
     x.onreadystatechange = function() {
         if (x.readyState === 4) {
             callback(x.responseText);
@@ -163,19 +172,27 @@ ajax.send = function(url, callback, method, data, contentType, sessionCookieName
     x.send(data);
 };
 
-ajax.authenticate = function(url, callback, data, username, password, sync) {  
-    
+ajax.authenticate = function (url, callback, data, username, password, sync) {
+
     var x = ajax.x();
+    x.onreadystatechange = function () {
+        if (x.readyState === 4) {
+                callback(x.responseText);
+        } else {
+            console.log("F.. STATE IS:" + x.readyState);
+        }
+    };
+    
+    x.onerror = function () {
+        console.error(x.statusText);
+    };
+    
     try {
         x.open('POST', url, false);
     } catch (err) {
-
+        // Do nothing
     }
-    x.onreadystatechange = function() {
-        if (x.readyState === 4) {
-            callback(x.responseText);
-        }
-    };
+    
     x.setRequestHeader('X-OpenAM-Username', username);
     x.setRequestHeader('X-OpenAM-Password', password);
     x.setRequestHeader('Content-type', 'application/json');
@@ -198,33 +215,126 @@ ajax.post = function(url, data, callback, contentType, sync) {
 @function openamConfig OpenAM configuration
 @param {String} openAMBaseURL - The URL where OpenAM is running, example: "https://openam.example.com:443/openam"
 @param {String} realm - Name of the realm to be used, example: "/"
-@param {String} sessionCookieName - Name of the cookie where OpenAM stores the session id. Example: "iPlanetDirectoryPro"
-@param {String} domainName - The Domain Name where the OpenAM sets the cookies. Example: ".example.com"
+@param {optional Boolean} cacheEnabled - IF enabled, session valid status and attributs will be cached in sessionStorage, if possible. Example: false
+@param {optional Boolean} openamDebugEnabled - Enable debug, works for some browser, not for all. Example: true
 @param {optional Boolean} legacyEnabled - Is the OpenAM you are connecting to using the old APIs, then it is legacy. Example: false
-@param {optional Boolean} OPENAM_DEBUG_ENABLES - Enable debug, works for some browser, not for all. Example: true
 */
-function openamConfig(openAMBaseURL, realm, sessionCookieName, 
-    domainName, legacyEnabled, OPENAM_DEBUG_ENABLED) {
+function openamConfig(openAMBaseURL, realm, cacheEnabled, openamDebugEnabled,
+        legacyEnabled) {
     this.openAMBaseURL = openAMBaseURL;
     this.realm = realm;
-    this.sessionCookieName = sessionCookieName || "iPlanetDirectoryPro";
-    this.domainName = domainName;
+    serverinfo = this.getServerinfo();
+    this.sessionCookieName = JSON.parse(serverinfo).cookieName;
+    this.domainName = JSON.parse(serverinfo).domains[0];  // Taking the first domain
+    this.cacheEnabled = cacheEnabled;
     this.legacyEnabled = legacyEnabled || false;
-    this.OPENAM_DEBUG_ENABLED = OPENAM_DEBUG_ENABLED;
+    this.openamDebugEnabled = openamDebugEnabled;
     this.ssotoken = getCookie(this.sessionCookieName);
     this.XUILoginURL = this.openAMBaseURL + XUILoginURI;
     this.LoginURL = this.openAMBaseURL + LoginURI;
+    this.cacheTime = 3;
 }
 
+openamConfig.prototype.getServerinfo = function() {
+    var response = null;
+    var serverinfo_url = this.createServerinfoURL(this.realm);
+    this.openamDebug("getServerinfo: Serverinfo URL: " + serverinfo_url);
+    ajax.get(serverinfo_url,
+             function(responseText) { 
+                        response = responseText;
+                      }, 
+                      'application/json');
+    return response;
+    
+};
+
+// Creates the proper OpenAM Attributes URL using the configured parameters
+openamConfig.prototype.createServerinfoURL = function(realm_) {
+    serverinfo_url = this.openAMBaseURL + serverinfoURI;
+    if (realm_ !== '' & realm_ !== '/') {
+        serverinfo_url = serverinfo_url.replace("/json", "/json" + realm_);
+    }
+    return serverinfo_url;
+};
+
+// Get local status
+openamConfig.prototype.checkLocal = function (storageKey) {
+
+    var now, expiration, data = false;
+    try {
+        this.openamDebug("About to enter SESSION STORAGE" + storageExist);
+        if (storageExist) {
+            data = sessionStorage.getItem(storageKey);
+            this.openamDebug("There is sessionStorage");
+            if (data) {
+                data = JSON.parse(data);
+                this.openamDebug("There is Data: " + data);
+                now = new Date();
+                expiration = new Date(data.timestamp);
+                expiration.setMinutes(expiration.getMinutes() + this.cacheTime);
+                if (now.getTime() > expiration.getTime()) {
+                    this.openamDebug("DATA EXPIRED ");
+                    data = false;
+                    sessionStorage.removeItem(storageKey);
+                } else {
+                    this.openamDebug("DATA NOT EXPIRED ");
+                    data = data.data;
+                }
+            }
+        }
+    } catch (error) {
+        this.openamDebug("STORAGE ERROR");
+        data =false;
+    }
+    return data;
+};
+
+openamConfig.prototype.storeLocal = function (storageKey, data) {
+    if (storageExist) {
+        try {
+            this.openamDebug("DATA TO STORE IS: " + storageKey + ":" + data);
+            sessionStorage.setItem(storageKey,
+                    JSON.stringify({
+                        timestamp: new Date(),
+                        data: data}));
+        } catch (err) {
+            // Nothing
+        }
+    }
+};
+
+openamConfig.prototype.removeLocal = function (storageKey) {
+    if (storageExist) {
+        try {
+            this.openamDebug("REMOVING " + storageKey);
+            sessionStorage.removeItem(storageKey);
+        } catch (err) {
+            // Do nothing
+        }
+    }
+};
+
+openamConfig.prototype.removeAllLocal = function () {
+    if (storageExist) {
+        try {
+            this.openamDebug("REMOVING ALL");
+            this.removeLocal("validSession");
+            this.removeLocal("attributes");
+        } catch (err) {
+            // Do nothing
+        }
+    }
+};
+
 /**
-@function redirectAuthNWithModule redirects for authentication to an OpenAM using an AuthN module
+@function authNRedirectModule redirects for authentication to an OpenAM using an AuthN module
 @param {String} module - Name of the module to be used for the authentication
 @param {optional String} realm - Name of the realm to be used (Default is the one configured in openamConfig)
 @param {optional String} gotoURL - URL to go after the authentication is successful. Default is to go back to the URL that invoked the function
 @param {optional String} gotoOnFail - URL to go if the authentication fails. Default is to go back to the URL that invoked the function
 @param {optional Boolean} classic - Use the Classic Login UI (true) or the XUI (false). Default is to use the XUI
 */
-openamConfig.prototype.redirectAuthNWithModule = function (module, realm, gotoURL, 
+openamConfig.prototype.authNRedirectModule = function (module, realm, gotoURL, 
                                                 gotoOnFail, classic) 
 {                                                 
     redirectURL = "";
@@ -235,7 +345,7 @@ openamConfig.prototype.redirectAuthNWithModule = function (module, realm, gotoUR
     gotoURL = gotoURL || myURL;
     gotoOnFail = gotoOnFail || myURL;
     classic = classic || false;
-
+ 
     if (!classic) {
         redirectURL = this.XUILoginURL + realm + "&" + moduleParam + "=" +
                 module + "&goto=" + gotoURL + "&gotoOnFail=" + gotoOnFail;
@@ -244,19 +354,47 @@ openamConfig.prototype.redirectAuthNWithModule = function (module, realm, gotoUR
                 moduleParam + "=" + module + "&goto=" + gotoURL + 
                 "&gotoOnFail=" + gotoOnFail;
     }
+    window.location = redirectURL;
+    return false;
+};
+
+/**
+@function authNRedirectModule redirects for authentication to an OpenAM using an AuthN module
+@param {String} module - Name of the module to be used for the authentication
+@param {optional String} realm - Name of the realm to be used (Default is the one configured in openamConfig)
+@param {optional String} gotoURL - URL to go after the authentication is successful. Default is to go back to the URL that invoked the function
+@param {optional Boolean} classic - Use the Classic Login UI (true) or the XUI (false). Default is to use the XUI
+*/
+openamConfig.prototype.authNRedirectModuleWdw = function (module, realm, gotoURL, classic) 
+{                                                 
+    redirectURL = "";
+    myURL = encodeURIComponent(getMyURL());
+
+    module = module || "DataStore";
+    realm = realm || this.realm;
+    gotoURL = gotoURL || myURL;
+    classic = classic || false;
+ 
+    if (!classic) {
+        redirectURL = this.XUILoginURL + realm + "&" + moduleParam + "=" +
+                module + "&goto=" + gotoURL;
+    } else {
+        redirectURL = this.LoginURL + "?" + realmParam + "=" + realm + "&" +
+                moduleParam + "=" + module + "&goto=" + gotoURL;
+    }
     openWindow(redirectURL, { height: 500 });
     return false;
 };
 
 /**
-@function redirectAuthNWithService redirects for authentication to an OpenAM using a service chain
+@function authNRedirectService redirects for authentication to an OpenAM using a service chain
 @param {String} service - Name of the service chain to be used for the authentication
 @param {optional String} realm - Name of the realm to be used (Default is the one configured in openamConfig)
 @param {optional String} gotoURL - URL to go after the authentication is successful. Default is to go back to the URL that invoked the function
 @param {optional String} gotoOnFail - URL to go if the authentication fails. Default is to go back to the URL that invoked the function
 @param {optional Boolean} classic - Use the Classic Login UI (true) or the XUI (false). Default is to use the XUI
 */
-openamConfig.prototype.redirectAuthNWithService = function (service, realm, gotoURL, 
+openamConfig.prototype.authNRedirectService = function (service, realm, gotoURL, 
                                                 gotoOnFail, classic) 
 {                                                    
     redirectURL = "";
@@ -276,18 +414,46 @@ openamConfig.prototype.redirectAuthNWithService = function (service, realm, goto
                 serviceParam + "=" + service + "&goto=" + gotoURL + 
                 "&gotoOnFail=" + gotoOnFail;
     }
-    openWindow(redirectURL, { height: 500 });
+    window.location = redirectURL;
     return false;      
 };
 
+/**
+@function authNRedirectService redirects for authentication to an OpenAM using a service chain
+@param {String} service - Name of the service chain to be used for the authentication
+@param {optional String} realm - Name of the realm to be used (Default is the one configured in openamConfig)
+@param {optional String} gotoURL - URL to go after the authentication is successful. Default is to go back to the URL that invoked the function
+@param {optional Boolean} classic - Use the Classic Login UI (true) or the XUI (false). Default is to use the XUI
+*/
+openamConfig.prototype.authNRedirectServiceWdw = function (service, realm, gotoURL, classic) 
+{                                                    
+    redirectURL = "";
+    myURL= encodeURIComponent(getMyURL());
+    
+    service = service || "ldapService";
+    realm = realm || this.realm;
+    gotoURL = gotoURL || myURL;
+    classic = classic || false;
+    
+    if (!classic) {
+        redirectURL = this.XUILoginURL + realm + "&" + serviceParam + "=" + 
+                    service + "&goto=" + gotoURL;
+    } else {
+        redirectURL = this.LoginURL + "?" + realmParam + "=" + realm + "&" + 
+                serviceParam + "=" + service + "&goto=" + gotoURL;
+    }
+    openWindow(redirectURL, { height: 500 });
+    return false;      
+};
 
 /**
 @function isUserAuthenticated If a user is authenticated, returns true
 */
 openamConfig.prototype.isUserAuthenticated = function () {
+    
     if (this.ssotoken && this.ssotoken !== '' && this.isSessionValid(this.ssotoken)) {
-        this.openamDebug("USER AUTHETNICATED");
-        return true;
+        this.openamDebug("USER AUTHENTICATED");
+        return true;      
     } else {
         this.openamDebug("USER NOT AUTHENTICATED");
         return false;
@@ -302,6 +468,17 @@ openamConfig.prototype.isSessionValid = function (tokenId) {
     var valid = false;
     var sessions_url = "";
     
+    response = this.checkLocal("validSession");
+    this.openamDebug("isSessionValid cached response: " + response);
+    if (response) {
+        valid = JSON.parse(response).valid;
+        uid = JSON.parse(response).uid;
+        this.realm = JSON.parse(response).realm;
+        if (valid && uid && this.realm) {
+            return valid;
+        }
+    }
+    
     if (!this.legacyEnabled) {
         this.openamDebug("isSessionValid: Legacy Mode Disabled");
         sessions_url = this.openAMBaseURL + sessionsURI;
@@ -310,6 +487,7 @@ openamConfig.prototype.isSessionValid = function (tokenId) {
                       valid = JSON.parse(responseText).valid;
                       uid = JSON.parse(responseText).uid;
                       this.realm = JSON.parse(responseText).realm;
+                      response = responseText;
                       },
                   'application/json');  
                   this.openamDebug("VALID IS: " + valid);
@@ -322,8 +500,10 @@ openamConfig.prototype.isSessionValid = function (tokenId) {
                       },
                    'application/json');
     }
+    this.storeLocal("validSession", response);
     this.openamDebug("isSessionValid: isValid Response: " + valid + "; uid="
         + uid + "; realm=" + this.realm);
+
     return valid;
 };
 
@@ -345,7 +525,6 @@ openamConfig.prototype.authenticate =  function (username, password, realm_, mod
     }
 };
 
-// Authenticates a user in a modern OpenAM using the credentials passed 
 /**
 @function authenticateWithModernOpenAM Authenticates an identity using username/password.
  The version of the AM should support the /json/authenticate endpoint
@@ -360,12 +539,16 @@ openamConfig.prototype.authenticate =  function (username, password, realm_, mod
 openamConfig.prototype.authenticateWithModernOpenAM = function(username, password, realm_, module_, service_) {
     authenticationSuccess = false;
     var tokenId = null;
+    if (!realm_  || realm_ === null) realm_=this.realm;
     authentication_url = this.createAuthenticationURL(realm_, module_, service_);
     this.openamDebug("authenticateWithModernOpenAM: AUTHN URL: " + authentication_url);
     try {
         ajax.authenticate(authentication_url,
                 function (responseText) {
-                    tokenId = JSON.parse(responseText).tokenId;
+                    if (responseText) {
+                       tokenId = JSON.parse(responseText).tokenId;
+                       response = responseText;
+                    }
                 }, "{}", username, password);
     } catch (err) {
         this.openamDebug("authenticateWithModernOenAM: " + err);
@@ -374,9 +557,11 @@ openamConfig.prototype.authenticateWithModernOpenAM = function(username, passwor
     }    
     if ( tokenId && tokenId.length !== 0 ) {
         createCookie(this.sessionCookieName, tokenId, 3, this.domainName);
+        this.openamDebug("RESPONSE: " + response);
         authenticationSuccess = true;
     } else {
         deleteCookie(this.sessionCookieName);
+        this.removeLocal("validSession");
         authenticationSuccess = false;
     }
     this.openamDebug("authenticateWithModernOpenAM.Session VALID: " + authenticationSuccess);
@@ -384,7 +569,6 @@ openamConfig.prototype.authenticateWithModernOpenAM = function(username, passwor
     return tokenId;
 };
 
-// Authenticates a user in a legacy OpenAM using the credentials passed 
 /**
 @function authenticateWithLegacyOpenAM Authenticates an identity using username/password.
  The realm, module or service can be specified but only modules and services 
@@ -399,10 +583,10 @@ openamConfig.prototype.authenticateWithLegacyOpenAM = function(username, passwor
     authenticationSuccess = false;
     var tokenId = null;
     return tokenId;
+    
     // TO DO: Complete this
 };
 
-// Creates the proper OpenAM authentication URL using the parameters configured 
 /**
 @function createAuthenticationURL Construct the URL to be used for the authentication
 @param {optional String} realm_ - The realm to be used during the authentication. Default is the realm used in openamConfig
@@ -439,18 +623,25 @@ openamConfig.prototype.createAuthenticationURL = function (realm_, module_, serv
 
 // Pulls attributes from OpenAM using the existing session and username 
 openamConfig.prototype.getIdentityAttributes = function (attributes) {
-    tokenId = this.ssotoken;
+    
+    response = null;
+    if (this.cacheEnabled) {
+        data = this.checkLocal("attributes");
+        if (data) return data;
+    }   
+    
+    tokenId = this.ssotoken;   
     if (this.isSessionValid(tokenId)) {
         if (!this.legacyEnabled) {
             this.openamDebug("getAttributesFromOpenAM: LEGACY NOT ENABLED");
-            return this.getAttributesFromModernOpenAM(tokenId, attributes);      
+            response = this.getAttributesFromModernOpenAM(tokenId, attributes);   
         } else {
             this.openamDebug("getAttributesFromOpenAM: LEGACY ENABLED");
-            return this.getAttributesFromLegacyOpenAM(tokenId, attributes);
+            response = this.getAttributesFromLegacyOpenAM(tokenId, attributes);
         }
-    } else {
-        return null;
-    }
+    }    
+    if (response && this.cacheEnabled) this.storeLocal("attributes", response);
+    return response;
 };
 
 
@@ -532,6 +723,7 @@ openamConfig.prototype.logoutWithModernOpenAM = function () {
         this.ssotoken = null;
         logoutSuccess = false;
     }
+    this.removeAllLocal();
     this.openamDebug("logout result: " + logoutSuccess);                      
     return logoutSuccess;
 };
@@ -555,12 +747,12 @@ openamConfig.prototype.createLogoutURL = function(tokenId) {
 
 
 openamConfig.prototype.openamDebug = function (message) {
-    if (this.OPENAM_DEBUG_ENABLED) {
+    if (this.openamDebugEnabled) {
         try {
             console.log(message);
         } catch (err) {
-            alert("Debugging will be diabled, your browser does not support it");
-            this.OPENAM_DEBUG_ENABLED = false;
+            alert("Debugging will be disabled, your browser does not support it");
+            this.openamDebugEnabled = false;
         }
     }
 };

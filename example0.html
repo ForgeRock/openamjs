@@ -19,43 +19,15 @@
                 
         <script type="text/javascript">
             var thisURL = getMyURL();
-            console.log(thisURL);
             var thisURLEncoded = encodeURI(thisURL);
 
             // Configure the OpenAM connection
             var openam = new openamConfig(
-                    "http://openam1.example.com:8080/openam", // OpenAM base url
-                    "/",                                      // Realm
+                    "http://openam1.example.com:8080/openam", // openam base url
+                    "/",                                      // realm
                     true,                                     // cache Enabled?
                     true);                                    // Is debug enabled?
                     // false);                        // To DO: Is legacy enabled?
-
-            
-            function formShow(show) {
-                show = show || false;
-                if (show) {
-                    document.getElementById("login1").style.display = "block";
-                    document.getElementById("flip").style.display = "none";
-                    document.getElementById("cross").style.display = "block";
-                } else {
-                    document.getElementById("login1").style.display = "none";
-                    document.getElementById("flip").style.display = "block";
-                    document.getElementById("cross").style.display = "none";
-                }
-            }
-    
-            function authenticateUser() {
-                var username = document.forms["loginForm"]["username"].value;
-                var password = document.forms["loginForm"]["password"].value;
-                var tokenId_ = openam.authenticate(username, password);
-                if (tokenId_) {
-                    window.location = thisURL;
-                } else {
-                    document.getElementById("errorMessage").innerHTML = 'The authentication failed';
-                }
-                return false;
-            }
-
 
             function printAllStuff(data) {
                     var outputV = "";
@@ -80,40 +52,15 @@
             <img class="image-float-left" alt="OpenAM" src="images/ForgeRock_Logo.png"> 
             <div id="loginBox">
                 <img id="flip" class="loginButton image-float-right" 
-                     src="images/arrowdown2.png" alt="Login" onclick="formShow(true);">
-                <div id="login1" style="display: none; width: 300px; height: 190px;float: right;">
-                    <img id="cross" class="loginButton image-float-right" 
-                         src="images/cross.gif" style="display: none;" onclick="formShow(false);">
-                    <table>
-                        <tr>
-                            <td width="5%">&nbsp;</td>
-                            <td width="45%" align="center" valign="middle">
-                                <form id="loginForm" method="post" action="" 
-                                      name="loginForm" 
-                                      onsubmit="return authenticateUser();">
-                                    <table>
-                                        <tr><td>Login with your existing account:</td></tr>
-                                        <tr><td height="10"></td></tr>
-                                        <tr><td>User name</td></tr>
-                                        <tr><td><input type="text" name="username" size="20" /></td></tr>
-                                        <tr><td>Password</td></tr>
-                                        <tr><td><input type="password" name="password" size="20" /></td></tr>
-                                        <tr><td><input type="submit" value="Login" /></td></tr>
-                                        <tr><td>&nbsp;</td></tr>
-                                        <tr><td><div id="errorMessage"></div></td></tr>
-                                    </table> 
-                                </form>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
+                     src="images/arrowdown2.png" 
+                     alt="Login" 
+                     onclick="openam.authNRedirectModule('DataStore');">
             </div>
 
             <div id="welcomeAndLogout">
                 <div id="welcome1" class="image-float-left"></div>
                 <div>
-                    <img id="logoutBtn" class="image-float-right" 
-                         src="images/logout.png" 
+                    <img id="logoutBtn" class="image-float-right" src="images/logout.png" 
                          alt="Logout" onclick="openam.logout();">
                 </div>
             </div>     

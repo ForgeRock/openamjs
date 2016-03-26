@@ -26,10 +26,9 @@
             var openam = new openamConfig(
                     "http://openam1.example.com:8080/openam", // OpenAM base url
                     "/",                                      // Default realm
-                    "iPlanetDirectoryPro",                    // Session cookie name
-                    ".example.com",                           // Domain name
-                    false,                                    // Is legacy enabled?
-                    true);                                    // Is debug enabled (see java console)?
+                    true,                                     // cache Enabled?
+                    true);                                    // Is debug enabled?
+                    // false);                        // To DO: Is legacy enabled?
 
             function formShow(show) {
                 show = show || false;
@@ -122,35 +121,35 @@
                                             <img id="facebook" class="socialButton" 
                                                 src="images/facebook.png" 
                                                 alt="facebook" 
-                                                onclick="openam.redirectAuthNWithModule('facebook');">
+                                                onclick="openam.authNRedirectModuleWdw('facebook');">
                                         </td>
                                     </tr>
                                     <tr><td align="center" valign="middle">
                                             <img id="linkedin" class="socialButton"
                                                 src="images/linkedin.png" 
                                                 alt="linkedin" 
-                                                onclick="openam.redirectAuthNWithModule('linkedin');">
+                                                onclick="openam.authNRedirectModuleWdw('linkedin');">
                                         </td>
                                     </tr>
                                     <tr><td align="center" valign="middle">
                                             <img id="google" class="socialButton"
                                                 src="images/google.png" 
                                                 alt="google" 
-                                                onclick="openam.redirectAuthNWithModule('google');">
+                                                onclick="openam.authNRedirectModuleWdw('google');">
                                         </td>
                                     </tr>
                                     <tr><td align="center" valign="middle">
                                             <img id="msn" class="socialButton" 
                                                 src="images/msn.png" 
                                                 alt="msn" 
-                                                onclick="openam.redirectAuthNWithModule('msn');">
+                                                onclick="openam.authNRedirectModuleWdw('msn');">
                                         </td>
                                     </tr>
                                     <tr><td align="center" valign="middle">
                                             <img id="amazon" class="socialButton" 
                                                 src="images/amazon.png" 
                                                 alt="amazon" 
-                                                onclick="openam.redirectAuthNWithModule('amazon');">
+                                                onclick="openam.authNRedirectModuleWdw('amazon');">
                                         </td>
                                     </tr>
                                 </table>

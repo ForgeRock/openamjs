@@ -25,10 +25,9 @@
             var openam = new openamConfig(
                     "http://openam1.example.com:8080/openam", // openam base url
                     "/",                                      // default realm
-                    "iPlanetDirectoryPro",                    // Session cookie name
-                    ".example.com",                           // Domain name
-                    false,                                    // Is legacy enabled?
-                    true);                                    // Is debug enabled (see java console)?
+                    true,                                     // cache Enabled?
+                    true);                                    // Is debug enabled?
+                    // false);                        // To DO: Is legacy enabled?
         </script>
 
         <div id="header">
@@ -74,11 +73,8 @@
                 welcomeAndLogout();
             } else {
                 document.getElementById("attributeWdw").innerHTML = "<br>You are not authenticated";
-                // Login Box with social authentication (true, "comma separated list")
-                loginBox(true,"facebook,linkedin,google,msn,amazon");
-                // or without social authentication
-                // loginBox(false);
-                
+                // Login Box without social authentication (false)
+                loginBox(false); 
             }
         </script>
 

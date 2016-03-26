@@ -25,10 +25,9 @@
             var openam = new openamConfig(
                     "http://openam1.example.com:8080/openam", // openam base url
                     "/",                                      // realm
-                    "iPlanetDirectoryPro",                    // Session cookie name
-                    ".example.com",                           // Domain name
-                    false,                                    // Is legacy enabled?
-                    true);                                    // Is debug enabled (see java console)?
+                    true,                                     // cache Enabled?
+                    true);                                    // Is debug enabled?
+                    // false);                        // To DO: Is legacy enabled?
 
             function printAllStuff(data) {
                     var outputV = "";
@@ -55,7 +54,7 @@
                 <img id="flip" class="loginButton image-float-right" 
                      src="images/arrowdown2.png" 
                      alt="Login" 
-                     onclick="openam.redirectAuthNWithModule('DataStore');">
+                     onclick="openam.authNRedirectModuleWdw('DataStore');">
             </div>
 
             <div id="welcomeAndLogout">

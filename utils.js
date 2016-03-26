@@ -79,7 +79,7 @@ function addSocial(params, displayClass) {
     cons1 = "<tr><td align=\"center\" valign=\"middle\"><img id=\"";
     cons2 = "\" class=\"" + displayClass + "\" src=\"images/";
     cons3 = "\"" + "alt=\"";
-    cons4 = "\" onclick=\"" + "openam.redirectAuthNWithModule(\'";
+    cons4 = "\" onclick=\"" + "openam.authNRedirectModuleWdw(\'";
     cons5 = "\');\"></td></tr>";
 
     var modules = params.split(',');
@@ -187,7 +187,7 @@ function welcomeAndLogout() {
 function authenticateUser() {
     var username = document.forms["loginForm"]["username"].value;
     var password = document.forms["loginForm"]["password"].value;
-    var tokenId_ = openam.authenticate(username, password, "/humans");
+    var tokenId_ = openam.authenticate(username, password);
     if (tokenId_) {
         window.location = thisURL;
     } else {
