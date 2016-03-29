@@ -18,9 +18,6 @@
     <body class="NAPAStyle">
                 
         <script type="text/javascript">
-            var thisURL = getMyURL();
-            // var thisURLEncoded = encodeURIComponent(thisURL);
-            // console.log(thisURLEncoded);
 
             // Configure the OpenAM connection
             var openam = new openamConfig(
@@ -48,7 +45,7 @@
                 var password = document.forms["loginForm"]["password"].value;
                 var tokenId_ = openam.authenticate(username, password);
                 if (tokenId_) {
-                    window.location = thisURL;
+                    window.location = getMyURL();
                 } else {
                     document.getElementById("errorMessage").innerHTML = 'The authentication failed';
                 }
@@ -58,11 +55,11 @@
 
             function printAllStuff(data) {
                     var outputV = "";
-                    var attributes = JSON.parse(data)
+                    var attributes = JSON.parse(data);
                     for (var key in attributes) {
                         if (attributes.hasOwnProperty(key)) {
                             outputV = "<tr>" +
-                                "<td class=\"left\">" + key + ":</td>" +
+                                "<td class=\"left\">" + key + "</td>" +
                                 "<td class=\"right\">" + attributes[key]+ "</td>" +
                                 "</tr>" +
                                 outputV;

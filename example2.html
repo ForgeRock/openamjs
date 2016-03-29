@@ -18,9 +18,6 @@
     <body class="NAPAStyle">
                 
         <script type="text/javascript">
-            var thisURL = getMyURL();
-            console.log(thisURL);
-            var thisURLEncoded = encodeURI(thisURL);
 
             // Configure the OpenAM connection
             var openam = new openamConfig(
@@ -49,7 +46,7 @@
                 var password = document.forms["loginForm"]["password"].value;
                 var tokenId_ = openam.authenticate(username, password);
                 if (tokenId_) {
-                    window.location = thisURL;
+                    window.location = getMyURL();
                 } else {
                     document.getElementById("errorMessage").innerHTML = 'The authentication failed';
                 }
@@ -59,11 +56,11 @@
 
             function printAllStuff(data) {
                     var outputV = "";
-                    var attributes = JSON.parse(data)
+                    var attributes = JSON.parse(data);
                     for (var key in attributes) {
                         if (attributes.hasOwnProperty(key)) {
                             outputV = "<tr>" +
-                                "<td class=\"left\">" + key + ":</td>" +
+                                "<td class=\"left\">" + key + "</td>" +
                                 "<td class=\"right\">" + attributes[key]+ "</td>" +
                                 "</tr>" +
                                 outputV;
@@ -78,7 +75,7 @@
 
         <div id="header">
             <img class="image-float-left" alt="OpenAM" src="images/ForgeRock_Logo.png"> 
-            <div id="loginBox">
+            <div id="loginBox"> <!-- The login box appearing on the header when clicking the login button -->
                 <img id="flip" class="loginButton image-float-right" 
                      src="images/arrowdown2.png" alt="Login" onclick="formShow(true);">
                 <div id="login1" style="display: none; width: 300px; height: 190px;float: right;">
@@ -107,7 +104,7 @@
                         </tr>
                     </table>
                 </div>
-            </div>
+            </div> <!-- login box ends here -->
 
             <div id="welcomeAndLogout">
                 <div id="welcome1" class="image-float-left"></div>

@@ -18,8 +18,6 @@
     <body class="NAPAStyle">
                 
         <script type="text/javascript">
-            var thisURL = getMyURL();
-            var thisURLEncoded = encodeURI(thisURL);
 
             // Configure the OpenAM connection
             var openam = new openamConfig(
@@ -31,11 +29,11 @@
 
             function printAllStuff(data) {
                     var outputV = "";
-                    var attributes = JSON.parse(data)
+                    var attributes = JSON.parse(data);
                     for (var key in attributes) {
                         if (attributes.hasOwnProperty(key)) {
                             outputV = "<tr>" +
-                                "<td class=\"left\">" + key + ":</td>" +
+                                "<td class=\"left\">" + key + "</td>" +
                                 "<td class=\"right\">" + attributes[key]+ "</td>" +
                                 "</tr>" +
                                 outputV;
