@@ -11,7 +11,7 @@
  * Header, with the fields enclosed by brackets [] replaced by your own identifying
  * information: "Portions copyright [year] [name of copyright owner]".
  *
- * Copyright 2014 ForgeRock AS.
+ * Copyright 2014-2016 ForgeRock AS.
  */
 
 /* 
@@ -28,7 +28,7 @@ function cellize(cell, assignedClass) {
   
 function rowize(row, assignedClass) {
         var output1 = "";
-        if (assignedClass.trim().length == 0 ) {
+        if (assignedClass.trim().length === 0 ) {
            output1 = "<tr>" + row + "</tr>";
         }
         else {
@@ -44,7 +44,7 @@ function tableize(table, assignedClass) {
 
 function printAllStuff(jsonData) {
         var outputV = "";
-        var attributes = JSON.parse(jsonData)
+        var attributes = JSON.parse(jsonData);
         for (var key in attributes) {
             if (attributes.hasOwnProperty(key)) {
                 outputV = rowize(
@@ -189,7 +189,7 @@ function authenticateUser() {
     var password = document.forms["loginForm"]["password"].value;
     var tokenId_ = openam.authenticate(username, password);
     if (tokenId_) {
-        window.location = thisURL;
+        window.location = getMyURL();
     } else {
         document.getElementById("errorMessage").innerHTML = 'The authentication failed';
     }
