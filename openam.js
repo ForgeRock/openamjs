@@ -18,7 +18,7 @@
  * To be extended further
  * openam.js (v0.1)
  * Author: Identity Wrestler
- * Notice: This wrapper is not suported/maintained by ForgeRock
+ * Notice: This wrapper is not suported/maintained/endorsed by ForgeRock
  */
 
 // TO DO: The Legacy Functions are not implemented yet.
@@ -178,8 +178,6 @@ ajax.authenticate = function (url, callback, data, username, password, sync) {
     x.onreadystatechange = function () {
         if (x.readyState === 4) {
                 callback(x.responseText);
-        } else {
-            console.log("F.. STATE IS:" + x.readyState);
         }
     };
     
@@ -212,12 +210,15 @@ ajax.post = function(url, data, callback, contentType, sync) {
 };
 
 /**
-@function openamConfig OpenAM configuration
-@param {String} openAMBaseURL - The URL where OpenAM is running, example: "https://openam.example.com:443/openam"
-@param {String} realm - Name of the realm to be used, example: "/"
-@param {optional Boolean} cacheEnabled - IF enabled, session valid status and attributs will be cached in sessionStorage, if possible. Example: false
-@param {optional Boolean} openamDebugEnabled - Enable debug, works for some browser, not for all. Example: true
-@param {optional Boolean} legacyEnabled - Is the OpenAM you are connecting to using the old APIs, then it is legacy. Example: false
+ * OpenAM Configuration instance
+ * @constructor
+ * @function openamConfig
+ * @param {String} openAMBaseURL - The URL where OpenAM is running, example: "https://openam.example.com:443/openam"
+ * @param {String} realm - Name of the realm to be used, example: "/"
+ * @param {Boolean | undefined} cacheEnabled - IF enabled, session valid status and attributs will be cached in sessionStorage, if possible. Example: false
+ * @param {Boolean | undefined} openamDebugEnabled - Enable debug, works for some browser, not for all. Example: true
+ * @param {Boolean | undefined} legacyEnabled - Is the OpenAM you are connecting to using the old APIs, then it is legacy. Example: false
+ * @returns {openamConfig} An instance of the OpenAM Configuration.
 */
 function openamConfig(openAMBaseURL, realm, cacheEnabled, openamDebugEnabled,
         legacyEnabled) {
@@ -235,6 +236,11 @@ function openamConfig(openAMBaseURL, realm, cacheEnabled, openamDebugEnabled,
     this.cacheTime = 3;
 }
 
+/**
+ * getServerinfo
+ * @function getServerinfo
+ * @returns {JSON} The value provided by the OpeAM serverinfo endpoint
+ */
 openamConfig.prototype.getServerinfo = function() {
     var response = null;
     var serverinfo_url = this.createServerinfoURL(this.realm);
@@ -248,17 +254,27 @@ openamConfig.prototype.getServerinfo = function() {
     
 };
 
-// Creates the proper OpenAM Attributes URL using the configured parameters
-openamConfig.prototype.createServerinfoURL = function(realm_) {
+/**
+ * Creates the proper OpenAM URL for the serverinfo endpoint using the configured parameters
+ * @function createServerinfoURL
+ * @param {String} realm - Name of the realm to be used, example: "/"
+ * @returns {String} The URL of the serverinfo endpoint for the configured OpenAM in the realm provided
+ */
+openamConfig.prototype.createServerinfoURL = function(realm) {
     serverinfo_url = this.openAMBaseURL + serverinfoURI;
-    if (realm_ !== '' & realm_ !== '/') {
-        serverinfo_url = serverinfo_url.replace("/json", "/json" + realm_);
+    if (realm !== '' & realm !== '/') {
+        serverinfo_url = serverinfo_url.replace("/json", "/json" + realm);
     }
     return serverinfo_url;
 };
 
-// Get local status
-openamConfig.prototype.checkLocal = function (storageKey) {
+/**
+ * Check the local session storage
+ * @function getLocal
+ * @param {String} storageKey
+ * @returns {JSON} The value of the attribute requested
+ */
+openamConfig.prototype.getLocal = function (storageKey) {
 
     var now, expiration, data = false;
     try {
@@ -289,6 +305,12 @@ openamConfig.prototype.checkLocal = function (storageKey) {
     return data;
 };
 
+/**
+ * Stores a value "data" in the key "storageKey" in the local session storage
+ * @function storeLocal
+ * @param {type} storageKey - The key to be used to store the value
+ * @param {type} data - The value of the data to be stored
+ */
 openamConfig.prototype.storeLocal = function (storageKey, data) {
     if (storageExist) {
         try {
@@ -303,6 +325,11 @@ openamConfig.prototype.storeLocal = function (storageKey, data) {
     }
 };
 
+/**
+ * Removes the specified key from the session storage
+ * @function removeLocal
+ * @param {type} storageKey - The key-value pair to be removed
+ */
 openamConfig.prototype.removeLocal = function (storageKey) {
     if (storageExist) {
         try {
@@ -314,6 +341,10 @@ openamConfig.prototype.removeLocal = function (storageKey) {
     }
 };
 
+/**
+ * Removes all the key-value pairs stored by this library in the local session storage
+ * @function removeAllLocal
+ */
 openamConfig.prototype.removeAllLocal = function () {
     if (storageExist) {
         try {
@@ -327,12 +358,13 @@ openamConfig.prototype.removeAllLocal = function () {
 };
 
 /**
-@function authNRedirectModule redirects for authentication to an OpenAM using an AuthN module
-@param {String} module - Name of the module to be used for the authentication
-@param {optional String} realm - Name of the realm to be used (Default is the one configured in openamConfig)
-@param {optional String} gotoURL - URL to go after the authentication is successful. Default is to go back to the URL that invoked the function
-@param {optional String} gotoOnFail - URL to go if the authentication fails. Default is to go back to the URL that invoked the function
-@param {optional Boolean} classic - Use the Classic Login UI (true) or the XUI (false). Default is to use the XUI
+ * Redirects for authentication to an OpenAM using the Authentication module specified
+ * @function authNRedirectModule
+ * @param {String} module - Name of the module to be used for the authentication
+ * @param {String | undefined} realm - Name of the realm to be used (Default is the one configured in openamConfig)
+ * @param {String | undefined} gotoURL - URL to go after the authentication is successful. Default is to go back to the URL that invoked the function
+ * @param {String | undefined} gotoOnFail - URL to go if the authentication fails. Default is to go back to the URL that invoked the function
+ * @param {Boolean | undefined} classic - Use the Classic Login UI (true) or the XUI (false). Default is to use the XUI
 */
 openamConfig.prototype.authNRedirectModule = function (module, realm, gotoURL, 
                                                 gotoOnFail, classic) 
@@ -359,11 +391,12 @@ openamConfig.prototype.authNRedirectModule = function (module, realm, gotoURL,
 };
 
 /**
-@function authNRedirectModule redirects for authentication to an OpenAM using an AuthN module
-@param {String} module - Name of the module to be used for the authentication
-@param {optional String} realm - Name of the realm to be used (Default is the one configured in openamConfig)
-@param {optional String} gotoURL - URL to go after the authentication is successful. Default is to go back to the URL that invoked the function
-@param {optional Boolean} classic - Use the Classic Login UI (true) or the XUI (false). Default is to use the XUI
+ * Redirects for authentication to an OpenAM using the Authentication module specified using a window instead of redirecting to a new page
+* @function authNRedirectModuleWdw
+* @param {String} module - Name of the module to be used for the authentication
+* @param {String | undefined} realm - Name of the realm to be used (Default is the one configured in openamConfig)
+* @param {String | undefined} gotoURL - URL to go after the authentication is successful. Default is to go back to the URL that invoked the function
+* @param {Boolean | undefined} classic - Use the Classic Login UI (true) or the XUI (false). Default is to use the XUI
 */
 openamConfig.prototype.authNRedirectModuleWdw = function (module, realm, gotoURL, classic) 
 {                                                 
@@ -387,12 +420,13 @@ openamConfig.prototype.authNRedirectModuleWdw = function (module, realm, gotoURL
 };
 
 /**
-@function authNRedirectService redirects for authentication to an OpenAM using a service chain
-@param {String} service - Name of the service chain to be used for the authentication
-@param {optional String} realm - Name of the realm to be used (Default is the one configured in openamConfig)
-@param {optional String} gotoURL - URL to go after the authentication is successful. Default is to go back to the URL that invoked the function
-@param {optional String} gotoOnFail - URL to go if the authentication fails. Default is to go back to the URL that invoked the function
-@param {optional Boolean} classic - Use the Classic Login UI (true) or the XUI (false). Default is to use the XUI
+ * Redirects for authentication to an OpenAM using the Authentication service chain specified
+ * @function authNRedirectService
+ * @param {String} service - Name of the service chain to be used for the authentication
+ * @param {String | undefined} realm - Name of the realm to be used (Default is the one configured in openamConfig)
+ * @param {String | undefined} gotoURL - URL to go after the authentication is successful. Default is to go back to the URL that invoked the function
+ * @param {String | undefined} gotoOnFail - URL to go if the authentication fails. Default is to go back to the URL that invoked the function
+ * @param {Boolean | undefined} classic - Use the Classic Login UI (true) or the XUI (false). Default is to use the XUI
 */
 openamConfig.prototype.authNRedirectService = function (service, realm, gotoURL, 
                                                 gotoOnFail, classic) 
@@ -419,11 +453,12 @@ openamConfig.prototype.authNRedirectService = function (service, realm, gotoURL,
 };
 
 /**
-@function authNRedirectService redirects for authentication to an OpenAM using a service chain
-@param {String} service - Name of the service chain to be used for the authentication
-@param {optional String} realm - Name of the realm to be used (Default is the one configured in openamConfig)
-@param {optional String} gotoURL - URL to go after the authentication is successful. Default is to go back to the URL that invoked the function
-@param {optional Boolean} classic - Use the Classic Login UI (true) or the XUI (false). Default is to use the XUI
+ * Redirects for authentication to an OpenAM using the Authentication service chain specified using a window instead of a new page
+ * @function authNRedirectServiceWdw
+ * @param {String} service - Name of the service chain to be used for the authentication
+ * @param {String | undefined} realm - Name of the realm to be used (Default is the one configured in openamConfig)
+ * @param {String | undefined} gotoURL - URL to go after the authentication is successful. Default is to go back to the URL that invoked the function
+ * @param {Boolean | undefined} classic - Use the Classic Login UI (true) or the XUI (false). Default is to use the XUI
 */
 openamConfig.prototype.authNRedirectServiceWdw = function (service, realm, gotoURL, classic) 
 {                                                    
@@ -447,7 +482,9 @@ openamConfig.prototype.authNRedirectServiceWdw = function (service, realm, gotoU
 };
 
 /**
-@function isUserAuthenticated If a user is authenticated, returns true
+ *  Checks if a user is authenticated
+ * @function isUserAuthenticated
+ * @returns {Boolean} - True if a user is authenticated
 */
 openamConfig.prototype.isUserAuthenticated = function () {
     
@@ -461,14 +498,16 @@ openamConfig.prototype.isUserAuthenticated = function () {
 };
 
 /**
-@function isSessionValid if the session that the tokenID represents is valid, returns true.
-@param {String} tokenId - The SSO Token ID (a.k.a the identifier of the session)
+ * Checks if the session that the tokenID represents is valid
+ * @function isSessionValid
+ * @param {String} tokenId - The SSO Token ID (a.k.a the identifier of the session)
+ * @returns {Boolean} - True if the session is valid
 */
 openamConfig.prototype.isSessionValid = function (tokenId) {
     var valid = false;
     var sessions_url = "";
     
-    response = this.checkLocal("validSession");
+    response = this.getLocal("validSession");
     this.openamDebug("isSessionValid cached response: " + response);
     if (response) {
         valid = JSON.parse(response).valid;
@@ -509,38 +548,41 @@ openamConfig.prototype.isSessionValid = function (tokenId) {
 
 
 /**
-@function authenticate Authenticates an identity using username/password. The realm, module or service can be specified
- but only modules and services with username/password are supported at the moment
-@param {String} username - Name of the user(or identity) to be authenticated
-@param {String} password - The Password to be used to authenticate the user: username
-@param {optional String} realm_ - The realm to be used during the authentication. Default is the realm used in openamConfig
-@param {optional String} module_ - AuthN module to be used. Default is the default AuthN module configured in the OpenAM for the realm
-@param {optional String} service_ - Name of the service chain to be used for the authentication
-*/
-openamConfig.prototype.authenticate =  function (username, password, realm_, module_, service_) {
+ * Authenticates an identity using username/password. The realm, module or service can be specified
+ *  but only modules and services with username/password are supported at the moment
+ *  @function authenticate
+ *  @param {String} username - Name of the user(or identity) to be authenticated
+ *  @param {String} password - The Password to be used to authenticate the user: username
+ *  @param {String | undefined} realm - The realm to be used during the authentication. Default is the realm used in openamConfig
+ *  @param {String | undefined} module - AuthN module to be used. Default is the default AuthN module configured in the OpenAM for the realm
+ *  @param {String | undefined} service - Name of the service chain to be used for the authentication
+ *  @returns {String | null} Returns the token id of the session if the authentication is successful, otherwise it returns null 
+ */
+openamConfig.prototype.authenticate =  function (username, password, realm, module, service) {
     if (!this.legacyEnabled) {
-        return this.authenticateWithModernOpenAM(username, password, realm_, module_, service_);      
+        return this.authenticateWithModernOpenAM(username, password, realm, module, service);      
     } else {
-        return this.authenticateWithLegacyOpenAM(username, password, realm_, module_, service_);
+        return this.authenticateWithLegacyOpenAM(username, password, realm, module, service);
     }
 };
 
 /**
-@function authenticateWithModernOpenAM Authenticates an identity using username/password.
- The version of the AM should support the /json/authenticate endpoint
- The realm, module or service can be specified but only modules and services 
- with username/password are supported at the moment
-@param {String} username - Name of the user(or identity) to be authenticated
-@param {String} password - The Password to be used to authenticate the user: username
-@param {optional String} realm_ - The realm to be used during the authentication. Default is the realm used in openamConfig
-@param {optional String} module_ - AuthN module to be used. Default is the default AuthN module configured in the OpenAM for the realm
-@param {optional String} service_ - Name of the service chain to be used for the authentication
+ *  Authenticates an identity using username/password.
+ *  The version of the AM should support the /json/authenticate endpoint.
+ *  The realm, module or service can be specified but only modules and services 
+ *  with username/password are supported at the moment
+ *  @function authenticateWithModernOpenAM
+ *  @param {String} username - Name of the user(or identity) to be authenticated
+ *  @param {String} password - The Password to be used to authenticate the user: username
+ *  @param {String | undefined} realm - The realm to be used during the authentication. Default is the realm used in openamConfig
+ *  @param {String | undefined} module - AuthN module to be used. Default is the default AuthN module configured in the OpenAM for the realm
+ *  @param {String | undefined} service - Name of the service chain to be used for the authentication
+ *  @returns {String | null} Returns the token id of the session if the authentication is successful, otherwise it returns null 
 */
-openamConfig.prototype.authenticateWithModernOpenAM = function(username, password, realm_, module_, service_) {
-    authenticationSuccess = false;
+openamConfig.prototype.authenticateWithModernOpenAM = function(username, password, realm, module, service) {
     var tokenId = null;
-    if (!realm_  || realm_ === null) realm_=this.realm;
-    authentication_url = this.createAuthenticationURL(realm_, module_, service_);
+    if (!realm  || realm === null) realm=this.realm;
+    authentication_url = this.createAuthenticationURL(realm, module, service);
     this.openamDebug("authenticateWithModernOpenAM: AUTHN URL: " + authentication_url);
     try {
         ajax.authenticate(authentication_url,
@@ -552,34 +594,32 @@ openamConfig.prototype.authenticateWithModernOpenAM = function(username, passwor
                 }, "{}", username, password);
     } catch (err) {
         this.openamDebug("authenticateWithModernOenAM: " + err);
-        this.openamDebug("authenticateWithModernOpenAM: ");
-        authenticationSuccess = false;
     }    
     if ( tokenId && tokenId.length !== 0 ) {
         createCookie(this.sessionCookieName, tokenId, 3, this.domainName);
         this.openamDebug("RESPONSE: " + response);
-        authenticationSuccess = true;
     } else {
         deleteCookie(this.sessionCookieName);
         this.removeLocal("validSession");
-        authenticationSuccess = false;
     }
-    this.openamDebug("authenticateWithModernOpenAM.Session VALID: " + authenticationSuccess);
     this.openamDebug("authenticateWithModernOpenAM.TOKENID: " + tokenId);
     return tokenId;
 };
 
 /**
-@function authenticateWithLegacyOpenAM Authenticates an identity using username/password.
- The realm, module or service can be specified but only modules and services 
- with username/password are supported at the moment
-@param {String} username - Name of the user(or identity) to be authenticated
-@param {String} password - The Password to be used to authenticate the user: username
-@param {optional String} realm_ - The realm to be used during the authentication. Default is the realm used in openamConfig
-@param {optional String} module_ - AuthN module to be used. Default is the default AuthN module configured in the OpenAM for the realm
-@param {optional String} service_ - Name of the service chain to be used for the authentication
+ * Authenticates an identity using username/password.
+ * The realm, module or service can be specified but only modules and services 
+ * with username/password are supported at the moment. 
+ * NOTE: This function is not implemented!
+ * @function authenticateWithLegacyOpenAM
+ * @param {String} username - Name of the user(or identity) to be authenticated
+ * @param {String} password - The Password to be used to authenticate the user: username
+ * @param {String | undefined} realm - The realm to be used during the authentication. Default is the realm used in openamConfig
+ * @param {String | undefined} module - AuthN module to be used. Default is the default AuthN module configured in the OpenAM for the realm
+ * @param {String | undefined} service - Name of the service chain to be used for the authentication
+ * @returns {String | null} Returns the token id of the session if the authentication is successful, otherwise it returns null 
 */
-openamConfig.prototype.authenticateWithLegacyOpenAM = function(username, password, realm_, module_, service_) {
+openamConfig.prototype.authenticateWithLegacyOpenAM = function(username, password, realm, module, service) {
     authenticationSuccess = false;
     var tokenId = null;
     return tokenId;
@@ -588,45 +628,51 @@ openamConfig.prototype.authenticateWithLegacyOpenAM = function(username, passwor
 };
 
 /**
-@function createAuthenticationURL Construct the URL to be used for the authentication
-@param {optional String} realm_ - The realm to be used during the authentication. Default is the realm used in openamConfig
-@param {optional String} module_ - AuthN module to be used. Default is the default AuthN module configured in the OpenAM for the realm
-@param {optional String} service_ - Name of the service chain to be used for the authentication
-*/
-openamConfig.prototype.createAuthenticationURL = function (realm_, module_, service_) {
+ * Constructs the URL to be used for the authentication based on the real and module or service provided
+ * @function createAuthenticationURL
+ * @param {String | undefined} realm - The realm to be used during the authentication. Default is the realm used in openamConfig
+ * @param {String | undefined} module - AuthN module to be used. Default is the default AuthN module configured in the OpenAM for the realm
+ * @param {String | undefined} service - Name of the service chain to be used for the authentication
+ * @returns {string} - Returns the URL of the authentication endpoint for the realm and module or service provided
+ */
+openamConfig.prototype.createAuthenticationURL = function (realm, module, service) {
     this.openamDebug("OpenAM Base URL: " + this.openAMBaseURL);
     authentication_url = this.openAMBaseURL + authenticationURI;
-    if (realm_ && realm_ !== '') {
-        authentication_url = authentication_url + "?" + realmParam + "=" + realm_;
+    if (realm && realm !== '') {
+        authentication_url = authentication_url + "?" + realmParam + "=" + realm;
     }
-    if (module_ && module_ !== '') {
+    if (module && module !== '') {
         if (authentication_url.indexOf("?") !== -1 ) {        
             authentication_url = authentication_url + "&" + authTypeParam + "=" + moduleParam + "&" +
-               authValueParam  + "=" + module_;
+               authValueParam  + "=" + module;
         } else {
             $authentication_url = authentication_url + "?" +  authTypeParam + "=" + moduleParam + "&" +
-                authValueParam  + "=" + module_;
+                authValueParam  + "=" + module;
         }
     } else {
-        if (service_ && service_ !== '') {
+        if (service && service !== '') {
             if (authentication_url.indexOf("?") !== -1 ) {
                 authentication_url = authentication_url + "&" + authTypeParam + "=" + serviceParam + "&" +
-                authValueParam  + "=" + service_;
+                authValueParam  + "=" + service;
             } else {
                 authentication_url = authentication_url + "?" + authTypeParam + "=" + serviceParam + "&" +
-                authValueParam  + "=" + service_;
+                authValueParam  + "=" + service;
             }
         }
     }
     return authentication_url;
 };
 
-// Pulls attributes from OpenAM using the existing session and username 
+/**
+ * Obtains the values of the profile attributes specified as a comma separated list
+ * @param {type} attributes - Comma separated list of attributes
+ * @returns {JSON} - Returns the value of the profile attributes requested from the OpenAM
+ */
 openamConfig.prototype.getIdentityAttributes = function (attributes) {
     
     response = null;
     if (this.cacheEnabled) {
-        data = this.checkLocal("attributes");
+        data = this.getLocal("attributes");
         if (data) return data;
     }   
     
@@ -645,7 +691,12 @@ openamConfig.prototype.getIdentityAttributes = function (attributes) {
 };
 
 
-// Pulls attributes from OpenAM using the existing session and username
+/**
+ * Obtains the values of the profile attributes specified as a comma separated list for an OpenAM version 12 or later
+ * @param {String} tokenId - The token id that represents the OpenAM session
+ * @param {String} attributes - Comma separated list of attributes
+ * @returns {JSON} - Returns the value of the profile attributes requested from the OpenAM
+ */
 openamConfig.prototype.getAttributesFromModernOpenAM = function (tokenId, attributes) {
     var response = null;
     var attributes_url=this.createAttributesURL(this.realm);
@@ -662,26 +713,41 @@ openamConfig.prototype.getAttributesFromModernOpenAM = function (tokenId, attrib
 };
 
 
-// To do
+/**
+ * Obtains the values of the profile attributes specified as a comma separated list for an OpenAM version 11 or older
+ * NOTE: This function is not yet implemented!
+ * @param {String} tokenId - The token id that represents the OpenAM session
+ * @param {String} attributes - Comma separated list of attributes
+ * @returns {JSON} - Returns the value of the profile attributes requested from the OpenAM
+ */
 openamConfig.prototype.getAttributesFromLegacyOpenAM = function (tokenId, attributes) {
    var response = null;
    // TO DO: Implement this
    return response;
 };
 
-// Creates the proper OpenAM Attributes URL using the configured parameters
-openamConfig.prototype.createAttributesURL = function(realm_) {
+/**
+ * Constructs the proper OpenAM Attributes URL using the configured realm
+ * @param {String | undefined} realm - Name of the realm to be used (Default is the one configured in openamConfig)
+ * @returns {String} - Returns the URL of the attributes end point of the OpenAM
+ */
+openamConfig.prototype.createAttributesURL = function(realm) {
+    realm = realm || this.realm;
     attributes_url = this.openAMBaseURL + attributesURI;
-    this.openamDebug("from inside realm_=" + realm_);
-    if (realm_ !== '' & realm_ !== '/') {
-        attributes_url = attributes_url.replace("/users", realm_ + "/users");
+    this.openamDebug("from inside realm=" + realm);
+    if (realm !== '' & realm !== '/') {
+        attributes_url = attributes_url.replace("/users", realm + "/users");
     }
     return attributes_url;
 };
 
-// Log out the user from the OpenAM
+/**
+ * Log out the user from the OpenAM
+ * @param {String} gotoURL - The URL to go to after a successful logout. Default is to return to the curent page
+ * @param {String} gotoOnFail - The URL to go to in case the logout failed. Default is to return to the curent page
+ * @returns {undefined}
+ */
 openamConfig.prototype.logout = function (gotoURL, gotoOnFail) {
-    // tokenId = this.ssotoken;
     gotoURL = gotoURL || getMyURL();
     gotoOnFail = gotoOnFail || getMyURL();
     
@@ -701,7 +767,10 @@ openamConfig.prototype.logout = function (gotoURL, gotoOnFail) {
     }
 };
 
-// Logs out a user from a modern OpenAM
+/**
+ * Logs out a user from a modern OpenAM
+ * @returns {Boolean} - Returns True if the logout is successful
+ */
 openamConfig.prototype.logoutWithModernOpenAM = function () {
     var logoutSuccess = false;
     tokenId = this.ssotoken;
@@ -728,7 +797,11 @@ openamConfig.prototype.logoutWithModernOpenAM = function () {
     return logoutSuccess;
 };
 
-// To do
+/**
+ * Logs out a user from a legacy OpenAM
+ * NOTE: This function is not implemented yet
+ * @returns {Boolean} - Returns True if the logout is successful
+ */
 openamConfig.prototype.logoutWithLegacyOpenAM = function () {
     var logoutSuccess = false;
     tokenId = this.ssotoken;
@@ -738,6 +811,11 @@ openamConfig.prototype.logoutWithLegacyOpenAM = function () {
 
 
 // Creates the proper OpenAM authentication URL using the parameters configured 
+/**
+ * 
+ * @param {String} tokenId - The token id that represents the OpenAM session
+ * @returns {String} - Returns The URL of the logout endpoint for a modern OpenAM
+ */
 openamConfig.prototype.createLogoutURL = function(tokenId) {
     if (!this.legacyEnabled) {
         logout_url = this.openAMBaseURL + sessionsURI + "/" + tokenId + "?_action=logout";
@@ -745,7 +823,11 @@ openamConfig.prototype.createLogoutURL = function(tokenId) {
     return logout_url;
 };
 
-
+/**
+ * Displays a message in the browser's console (if possible)
+ * @param {type} message - Message to display in the console
+ * @returns {undefined}
+ */
 openamConfig.prototype.openamDebug = function (message) {
     if (this.openamDebugEnabled) {
         try {
