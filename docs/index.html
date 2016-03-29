@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: OpenAM JS</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">OpenAM JS</h1>
+
+    
+
+
+
+    
+
+
+    <h3> </h3>
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+<section>
+ <article><h1>openamjs</h1><p>A small JavaScript wrapper to do basic REST API calls to OpenAM</p>
+<h2>Synopsis</h2><p>openam.js is a small library/wrapper of some of the REST APIs of OpenAM.
+The intention is to provide an easy way to integrate the calls in your Client JavaScript code without needing to implement the REST code yourself</p>
+<p>This is a work in progress, and also a JavaScript coding exercise. 
+This is a community work and it is NOT supported NOR endorsed by ForgeRock. If you feel it is useful, please contribute.</p>
+<h2>Motivation</h2><p>I wanted an easy way to integrate the OpenAM REST calls in JavaScript client code.
+The implementation here uses XMLHttpRequest or ActiveXObject (hence it might not work in some browsers), but I have tested it in modern ones.
+I can tell you that IE7 does not support CORS and in some cases when using the library you will be accessing an external domain (the OpenAM)</p>
+<h2>Installation</h2><p>Just add the openam.js to your project and start to use it. No jQuery is required, so you can use pure JS or combine it with your favorite framework</p>
+<h2>Examples</h2><p>There are seven examples in here, take a look to them and give them a go. You will need to adjust the openam configuration and be sure that your OpenAM supports CORS.</p>
+<p>To try these examples you just need a web container, it could be an apache web server or a tomcat server. These are pure html, css and javascript. Also your client browser should support CORS and xhr.</p>
+<ul>
+<li><strong>example0.html</strong>: A web page that uses openam.js in its simplest form. It uses the openam.authNRedirectModule('DataStore') method to redirect to the OpenAM User Interface using the DataStore authentication module and prompts the user for user name and password. No jQuery is used for this example. </li>
+<li><strong>example1.html</strong>: Similar to example0.html, except that it redirects using a window on top of the current web page. It uses the authNRedirectModuleWdw('DataStore') method. No jQuery is used for this example.</li>
+<li><strong>example2.html*</strong>: Displays a login form box that slides down when the user clicks the &quot;login&quot; button. This example uses the openam.authenticate(username, password) method and uses the default authentication method in the configured OpenAM. No jQuery is used for this example either.</li>
+<li><strong>example3.html</strong>: Similar to example2.html, except that the login form box also shows social authentication options, like facebook, linkedin, google, msn and amazon. The login box with the social authentication buttons is created with html and css, and the code is within the webpage. Of course you need to have your OpenAM configured to do social authentication and use the proper module names in your configuration. If you have not configured these authentication modules, you will see the window open, and an error saying that the module is denied. This example doesn't use jQuery either.</li>
+<li><strong>example4.html</strong>: This example is similar to example2.html, except that the webpage is simplified by moving several auxiliary script functions, like creating the login box and displaying it, to its own utils.js file. This example doesn't use jQuery either and like in the previous examples the login box is created using html and css.</li>
+<li><strong>example5.html</strong>: This is similat to example3.html, except that the webpage is simplified by moving several auxiliary script functions, like creating the login box and displaying it, to its own utils.js file. This example doesn't use jQuery either and as in the previous examples the login box is created using html and css. The login box uses the auxiliary function: loginBox(true,&quot;facebook,linkedin,google,msn,amazon&quot;), where &quot;true&quot; means we want to show social authentication options that are listed in the second parameter.</li>
+<li><strong>example6.html</strong>: This example is similar to example3.html. The difference is that it uses jQuery.</li>
+</ul>
+<p>One of the requirements for the examples above is to have your OpenAM properly configured. 
+You might need to enable CORS in OpenAM, if you have a question on how to do it, take a look to this blog entry: 
+https://forgerock.org/2015/02/openam-with-cors-is-that-a-salad-dessert-or-main-course/.</p>
+<p>Configure also the social authentication in your OpenAM if you want to see some of the examples working.</p>
+<h2>Documentation</h2><p>The documentation can be found under the docs folder (i.e. <a href="/docs/">here</a>)</p>
+<p>You can also take a look to the examples described above.</p>
+<p>Send us your feedback.</p></article>
+    </section>
+
+
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">OpenAM JS</a></h2><h3>openamjs</h3><ul><li><a href="global.html#authenticate">authenticate</a></li><li><a href="global.html#authenticateWithLegacyOpenAM">authenticateWithLegacyOpenAM</a></li><li><a href="global.html#authenticateWithModernOpenAM">authenticateWithModernOpenAM</a></li><li><a href="global.html#authNRedirectModule">authNRedirectModule</a></li><li><a href="global.html#authNRedirectModuleWdw">authNRedirectModuleWdw</a></li><li><a href="global.html#authNRedirectService">authNRedirectService</a></li><li><a href="global.html#authNRedirectServiceWdw">authNRedirectServiceWdw</a></li><li><a href="global.html#createAuthenticationURL">createAuthenticationURL</a></li><li><a href="global.html#createServerinfoURL">createServerinfoURL</a></li><li><a href="global.html#getLocal">getLocal</a></li><li><a href="global.html#getServerinfo">getServerinfo</a></li><li><a href="global.html#isSessionValid">isSessionValid</a></li><li><a href="global.html#isUserAuthenticated">isUserAuthenticated</a></li><li><a href="global.html#openamConfig">openamConfig</a></li><li><a href="global.html#removeAllLocal">removeAllLocal</a></li><li><a href="global.html#removeLocal">removeLocal</a></li><li><a href="global.html#storeLocal">storeLocal</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Mon Mar 21 2016 04:45:36 GMT+0100 (CET)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
