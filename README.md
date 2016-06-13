@@ -1,4 +1,9 @@
 # openamjs
+
+##Warning
+**This code is not supported by ForgeRock and it is your responsibility to verify that the software is suitable and safe for use.**
+
+##About
 A small JavaScript wrapper to do basic REST API calls to OpenAM
 
 ## Synopsis
@@ -39,7 +44,7 @@ Configure also the social authentication in your OpenAM if you want to see some 
 
 ## Documentation
 
-The documentation can be found under the docs folder (i.e. [here](/docs/))
+The documentation can be found under the docs folder (i.e. [here](/docs/openamjs.md))
 
 You can also take a look to the examples described above.
 
