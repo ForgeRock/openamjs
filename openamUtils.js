@@ -23,8 +23,8 @@
 
  
 /**
- * @function printWelcomeAndLogout
  * Prints the Welcome message for the "identity" and the logout button in a div
+ * @function printWelcomeAndLogout
  * @param {String} element 
  * @param {Object} options The object containing the configuration for this function
  * <pre>
@@ -73,9 +73,9 @@ function middleBar() {
 }
 
 /**
- * @function authenticateUser
- * Performs the authentication of the user using the form "options.formId" passed
+ *  Performs the authentication of the user using the form "options.formId" passed
  *  in the object options
+ * @function authenticateUser
  * @param {Object} options The options to be used for the authentication process
  * @returns {Boolean} false
  */
@@ -140,8 +140,8 @@ function authenticateUser(options) {
 }
 
 /**
- * @function formShow
  * Shows or hides the loginBox, i.e. it gives the slide down and up effect
+ * @function formShow
  * @param {Boolean} show True if the loginbox wants to be shown
  */
 function formShow(show) {
@@ -159,8 +159,8 @@ function formShow(show) {
 }
 
 /**
- * @function addSocial
  * Add the social modules buttons represented by the comma separated list
+ * @function addSocial
  * @param {Object} options - An object containing the options to use. This could be the OOTB
  *  socialImplementations that come when querying the OpenAM serverinfo URL or a 
  *  manually described object that should be called overrideSocialImplementations.
@@ -311,6 +311,13 @@ function myInsertCell(row, data, cellProps) {
     return cell1;
 }
 
+/*
+ * Deals with the ForgeRock Authenticator Callbacks
+ * @param {type} jsonResp
+ * @param {type} callback
+ * @param {type} myTable
+ * @returns {unresolved}
+ */
 function FROATH(jsonResp, callback, myTable) {
     var newRow,newCell,inputElem;
     if (jsonResp.callbacks[callback].type === "ConfirmationCallback" && 
@@ -379,6 +386,11 @@ function FROATH(jsonResp, callback, myTable) {
     return myTable;
 }
 
+/*
+ * Creates the form to appear on the left side of the login box
+ * @param {type} options
+ * @returns {Boolean|createForm.form}
+ */
 function createForm(options) {
     var formId = options.formId || "amLogin";
     var openamC = options.openam;
@@ -491,14 +503,31 @@ function createForm(options) {
     return form;
 }
 
+/*
+ * Adds the listener on submit event for the form cereated by CreateForm
+ * @param {type} forma
+ * @param {type} options
+ * @returns {undefined}
+ */
 function addListener(forma, options) {
     forma.onsubmit = function () { authenticateUser(options); return false;};
 }
 
+/*
+ * Removes the listener created bu the addListener method
+ * @param {type} forma
+ * @param {type} options
+ * @returns {undefined}
+ */
 function removeListener(forma, options) {
     forma.onsubmit = undefined;
 }
 
+/*
+ * Cretes a box that will be inserted in the login box
+ * @param {type} options
+ * @returns {createLoginDiv.login1}
+ */
 function createLoginDiv(options) {
     if (options) {
         var module = options.module || undefined;
@@ -534,7 +563,7 @@ function createLoginDiv(options) {
     else {
         login1.style.cssText = "display: none; width: 300px; height: 220px;float: right;";
     }
- 
+    
     var crossButton = document.createElement("a");
     crossButton.id ="cross";
     crossButton.className = "btn2";

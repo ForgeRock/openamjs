@@ -27,9 +27,8 @@
 var debugEnabled = false;
 var storageExist = ("sessionStorage" in window && window.sessionStorage);
 
-/**
+/*
  * Opens a window of height h and displays the URL url
- * @function openWindow
  * @param {type} url The URL that the window will display
  * @param {type} h The height of the window
  */
@@ -55,7 +54,7 @@ var openWindow = function (url, h) {
 
 /**
  * Gets the path/dir of the page running the script
- * getMyURLDir
+ * @function getMyURLDir
  * @returns {String}
  */
 function getMyURLDir() {
@@ -67,7 +66,7 @@ function getMyURLDir() {
                               
 /**
  * Gets the URL of the page running the script
- * getMyURL
+ * @function getMyURL
  * @returns {String}
  */
 function getMyURL() {
@@ -79,7 +78,8 @@ function getMyURL() {
 }
 
 /**
- * Create a Cookie for the domain we are running
+ * Create a Cookie for the domain specified in domainName
+ * @function createCookie
  * @param {type} name Name of the cookie to be created
  * @param {type} value Value for the cookie
  * @param {type} hours Time that the cookie will exist
@@ -102,6 +102,7 @@ function createCookie(name, value, hours, domainName) {
 
 /**
  * Deletes the coookie
+ * @deleteCookie
  * @param {type} name Name of the cookie to be deleted
  * @param {type} domainName Domain where the cookie resides
  */
@@ -109,10 +110,10 @@ function deleteCookie(name, domainName) {
     createCookie(name, "", -1, domainName);
 }
 
-// Get the cookie
+
 /**
  * Get's the value of the cookie specified
- * @function get Cookie
+ * @function getCookie
  * @param {type} name The name of the coookie whose value we want to retrieve
  * @returns {String} The value of the cookie
  */
@@ -134,6 +135,7 @@ return value;
 }
 
 /**
+ * Gets the value stored in the Local session store. Using the key specified by 
  * @function getLocal
  * @param {type} storageKey The key of the value to retrive
  * @returns {type} data The value of the value retrieved
@@ -193,10 +195,11 @@ function storeLocal(storageKey, data) {
     }
 };
 
-/**
- * Removes the specified key from the session storage
+/*
+ * Removes the value for the storageKey
  * @function removeLocal
- * @param {type} storageKey - The key-value pair to be removed
+ * @param {type} storageKey
+ * @returns {undefined}
  */
 function removeLocal(storageKey) {
     if (storageExist) {
@@ -209,10 +212,10 @@ function removeLocal(storageKey) {
     }
 };
 
-
 /**
- * Removes all the key-value pairs stored by this library in the local session storage
- * @function removeAllLocal
+ * Removes the whole local session storage
+ * @function removeAlllocal
+ * @returns {undefined}
  */
 function removeAllLocal() {
     if (storageExist) {
@@ -228,6 +231,7 @@ function removeAllLocal() {
 
 /**
  * Displays a message in the browser's console (if possible)
+ * @function debug
  * @param {type} message - Message to display in the console
  * @returns {undefined}
  */
@@ -331,22 +335,22 @@ ajax.post = function(url, data, callback, contentType, sync) {
 
 /**
  * OpenAM Configuration instance
- * @constructor
  * @function openamConfig
  * @param {Object} options - The OpenAM Configuration JSON object.
  * <pre>
  *  Here an example.  
  *  {
  *       baseurl: "http://openam1.example.com:8080/openam",
- *       realm: "/",                                            
- *       cachetime: 3,                                       
+ *       realm: "/",                                        // optional    
+ *       cachetime: 3,                                      // optional 
  *       debugenabled: true                                 // optional
  *  }   
  * </pre>
  * @param {String} options.baseurl - The URL where OpenAM is running, example: 
  *  "https://openam.example.com:443/openam"
- * @param {String} options.realm - Name of the realm to be used, example: "/"
- * @param {String} options.cachetime - Time in minutes the session valid response
+ * @param {String} [options.realm=The default realm for the baseurl used] - Name
+ *  of the realm to be used, example: "/"
+ * @param {String} [options.cachetime=3] - Time in minutes the session valid response
  *  and attributes are cached in the session store (if possible). To disable caching
  *  set the time to 0. Example of caching for 3 minutes: 3
  * @param {String} [options.debugenabled=false] - Enable debug, works for some browser,
@@ -441,11 +445,15 @@ function openamConfig(options) {
     };
 
     this.realm = function () {
-        return options.realm;
+        if (options.realm) {
+            return options.realm;
+        } else {
+            return "/";
+        }
     };
 
     serverinfo_url = options.baseurl + this.serverinfoURI();
-    if (options.realm !== '' & options.realm !== '/') {
+    if (options.realm && options.realm !== '' && options.realm !== '/') {
         serverinfo_url = serverinfo_url.replace("/json", "/json" + options.realm);
     }
 
@@ -500,7 +508,7 @@ function openamConfig(options) {
     this.cacheTime = 0;
     this.cacheEnabled = false;
     if (storageExist && options.cachetime > 0) {
-        this.cacheTime = options.cachetime;
+        this.cacheTime = options.cachetime || 3;
         this.cacheEnabled = true;
     }
 
@@ -508,7 +516,7 @@ function openamConfig(options) {
         return JSON.parse(response_sir).socialImplementations;
     };
 
-    /**
+    /*
      * Provides the URL to be used for the authentication based on the module or service provided
      * @param {String | undefined} module - AuthN module to be used. Default is the default AuthN module configured in the OpenAM for the realm
      * @param {String | undefined} service - Name of the service chain to be used for the authentication
@@ -541,9 +549,9 @@ function openamConfig(options) {
         return authentication_url;
     };
 
-    /**
+    /*
      * Provides the proper OpenAM Attributes URL using the configured realm
-     * @function attributesURL
+     * @param {String} orealm The realm to be used to build the URL
      * @returns {String} - Returns the URL of the attributes end point of the OpenAM
      */
     this.attributesURL = function (orealm) {
@@ -559,7 +567,7 @@ function openamConfig(options) {
         return attributes_url;
     };
 
-    /**
+    /*
      * Provides the OpenAM authentication URL using the parameters configured 
      * @param {String} tokenId - The token id that represents the OpenAM session
      * @returns {String} - Returns The URL of the logout endpoint for a modern OpenAM
@@ -571,7 +579,7 @@ function openamConfig(options) {
         return logout_url;
     };
 
-    /**
+    /*
      * Provides the OpenAM sessions URL using the parameters configured 
      * @returns {String} - Returns The URL of the sessions endpoint for a modern OpenAM
      */
@@ -749,8 +757,8 @@ openamConfig.prototype.isSessionValid = function (tokenId) {
 
 
 /**
- * Authenticates an identity using username/password. The realm, module or service
- *  can be specified. The credentials an be passed as headers if the module supports it.
+ *  Authenticates an identity using any authentication module
+ *  The version of the AM should support the /json/authenticate endpoint.
  * @function authenticate
  * @param {Object} options - The configuration object to use
  * <pre>
@@ -783,10 +791,10 @@ openamConfig.prototype.authenticate =  function (options) {
     }
 };
 
-/**
+/*
  *  Authenticates an identity using any authentication module
  *  The version of the AM should support the /json/authenticate endpoint.
- *  @function authenticateWithModernOpenAM
+ *  authenticateWithModernOpenAM
  * @param {Object} options - The configuration object to use
  * <pre>
  *  The options object is a JSON object, here an example.  
@@ -858,12 +866,11 @@ openamConfig.prototype.authenticateWithModernOpenAM = function(options) {
     return tokenId;
 };
 
-/**
+/*
  *  Authenticates an identity using a one state authentication module.
  *  The version of the AM should support the /json/authenticate endpoint.
  *  The realm, module or service can be specified but only modules and services 
  *  with one state and  credentials passed in headers are supported at the moment
- *  @function authenticateSimple
  * @param {Object} options - The configuration object to use
  * <pre>
  *  The options object is a JSON object, here an example.  
@@ -889,22 +896,95 @@ openamConfig.prototype.authenticateWithModernOpenAM = function(options) {
  * @param {String} [options.gotoOnFail=Current page] The URL to go to after an
   * authentication event has failed.
  */
+//openamConfig.prototype.authenticateSimple = function (options) {
+//    var gotoURL = options.gotoURL || getMyURL();
+//    var gotoOnFail = options.gotoOnFail || getMyURL();
+//    var tokenId = this.authenticateWithModernOpenAM(options);
+//    if (tokenId) {
+//        window.location = gotoURL;
+//    } else {
+//        if (gotoOnFail) {
+//           window.location = gotoOnFail; 
+//        } else {
+//            throw("Authentication failed");
+//        }
+//    }
+//};
+
+/**
+ *  Authenticates an identity using a one state authentication module by using 
+ *   the values submitted either in the form containing username and password or
+ *   by using credentials submitted in the headers object.
+ *  The version of the AM should support the /json/authenticate endpoint.
+ *  The realm, module or service can be specified but only modules and services 
+ *  with one state are supported.
+ * @function authenticateSimple
+ * @param {Object} options - The configuration object to use
+ * <pre>
+ *  The options object is a JSON object, here an example.  
+ *  {
+ *     module: "DataStore",                                         // optional
+ *     service: "ldapService",                                      // optional
+ *     username: 'usernameField',                                   // optional
+ *     password: 'passwordField',                                   // optional
+ *     headers: myHeaders,                                          // optional
+ *     realm: "/",                                                  // optional
+ *     gotoURL: "https://app.example.com:8080/mypath",              // optional
+ *     gotoOnFail: "https://app.example.com:8080/failed",           // optional
+ *  }   
+ * </pre>
+ * @param {String} [options.module=OpenAM realm default] The Authentication module 
+ *  to use in the left side of the login box.
+ * @param {String} [options.service=OpenAM realm default] The Authentication service
+ *  chain to use in the left side of the login box. Notice that service takes 
+ *  precedence over module.
+ * @param {String} [options.username='username'] The id of the field that
+ *  contains the username in the form. Either username and password or headers
+ *   must be specified.
+ * @param {String} [options.password='password'] The id of the field that
+ *  contains the password in the form. Either username and password or headers
+ *   must be specified.
+  * @param {Object} options.headers - Object containing the credentials passed
+  *  as headers
+ * @param {String} [options.realm=The one configured in openam.js] Realm where the
+ *   authentication will take place
+ * @param {Object} [options.headers] - Object containing the credentials passed
+ *  as headers. Either username and password or headers must be specified.
+ * @param {String} [options.gotoURL=Current page] The URL to go to after a
+ *  successful authentication.
+ * @param {String} [options.gotoOnFail=Current page] The URL to go to after an
+  * authentication event has failed.
+ */
 openamConfig.prototype.authenticateSimple = function (options) {
     var gotoURL = options.gotoURL || getMyURL();
     var gotoOnFail = options.gotoOnFail || getMyURL();
+    try {
+        var usernameField = options.username || "username";
+        var passwordField = options.password || "password";
+        var username = document.getElementById(usernameField).value;
+        var password = document.getElementById(passwordField).value;
+    } catch (err) {
+        // Do nothing
+    }
+    if (username && username !== '' && password && password !== '') {
+        options.headers = {
+            "X-OpenAM-Username": username,
+            "X-OpenAM-Password": password
+        };
+    }
     var tokenId = this.authenticateWithModernOpenAM(options);
     if (tokenId) {
         window.location = gotoURL;
     } else {
         if (gotoOnFail) {
-           window.location = gotoOnFail; 
+            window.location = gotoOnFail;
         } else {
             throw("Authentication failed");
         }
     }
 };
 
-/**
+/*
  * Authenticates an identity using username/password.
  * The realm, module or service can be specified but only modules and services 
  * with username/password are supported at the moment. 
@@ -940,6 +1020,7 @@ openamConfig.prototype.authenticateWithLegacyOpenAM = function(options) {
 
 /**
  * Obtains the values of the profile attributes specified as a comma separated list
+ * @function getIdentityAttributes
  * @param {Object} options - The configuration object to get the attributes
  * <pre>
  *  The options object is a JSON object, here an example.  
@@ -992,7 +1073,7 @@ openamConfig.prototype.getIdentityAttributes = function (options) {
 };
 
 
-/**
+/*
  * Obtains the values of the profile attributes specified as a comma separated list for an OpenAM version 12 or later
  * @param {String} tokenId - The token id that represents the OpenAM session
  * @param {String} attributes - Comma separated list of attributes
@@ -1022,7 +1103,7 @@ openamConfig.prototype.getAttributesFromModernOpenAM = function (tokenId, attrib
 };
 
 
-/**
+/*
  * Obtains the values of the profile attributes specified as a comma separated list for an OpenAM version 11 or older
  * NOTE: This function is not yet implemented!
  * @param {String} tokenId - The token id that represents the OpenAM session
@@ -1079,7 +1160,7 @@ openamConfig.prototype.logout = function (options) {
     }
 };
 
-/**
+/*
  * Logs out a user from a modern OpenAM
  * @returns {Boolean} - Returns True if the logout is successful
  */
@@ -1108,7 +1189,7 @@ openamConfig.prototype.logoutWithModernOpenAM = function () {
     return logoutSuccess;
 };
 
-/**
+/*
  * Logs out a user from a legacy OpenAM
  * NOTE: This function is not implemented yet
  * @returns {Boolean} - Returns True if the logout is successful
