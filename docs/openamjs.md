@@ -1,277 +1,776 @@
-## Functions
+OpenamJS
+======
 
-<dl>
-<dt><a href="#getMyURLDir">getMyURLDir()</a> ⇒ <code>String</code></dt>
-<dd><p>Gets the path/dir of the page running the script</p>
-</dd>
-<dt><a href="#getMyURL">getMyURL()</a> ⇒ <code>String</code></dt>
-<dd><p>Gets the URL of the page running the script</p>
-</dd>
-<dt><a href="#createCookie">createCookie(name, value, hours, domainName)</a></dt>
-<dd><p>Create a Cookie for the domain specified in domainName</p>
-</dd>
-<dt><a href="#deleteCookie">deleteCookie(name, domainName)</a></dt>
-<dd><p>Deletes the coookie</p>
-</dd>
-<dt><a href="#getCookie">getCookie(name)</a> ⇒ <code>String</code></dt>
-<dd><p>Get&#39;s the value of the cookie specified</p>
-</dd>
-<dt><a href="#getLocal">getLocal(storageKey)</a> ⇒ <code>type</code></dt>
-<dd><p>Gets the value stored in the Local session store. Using the key specified by</p>
-</dd>
-<dt><a href="#storeLocal">storeLocal(storageKey, data)</a></dt>
-<dd><p>Stores a value &quot;data&quot; in the key &quot;storageKey&quot; in the local session storage</p>
-</dd>
-<dt><a href="#removeAlllocal">removeAlllocal()</a> ⇒ <code>undefined</code></dt>
-<dd><p>Removes the whole local session storage</p>
-</dd>
-<dt><a href="#debug">debug(message)</a> ⇒ <code>undefined</code></dt>
-<dd><p>Displays a message in the browser&#39;s console (if possible)</p>
-</dd>
-<dt><a href="#openamConfig">openamConfig(options)</a> ⇒ <code><a href="#openamConfig">openamConfig</a></code></dt>
-<dd><p>OpenAM Configuration instance</p>
-</dd>
-<dt><a href="#authNRedirect">authNRedirect(options)</a></dt>
-<dd><p>Redirects for authentication to an OpenAM using the Authentication module specified</p>
-</dd>
-<dt><a href="#isUserAuthenticated">isUserAuthenticated()</a> ⇒ <code>Boolean</code></dt>
-<dd><p>Checks if a user is authenticated</p>
-</dd>
-<dt><a href="#isSessionValid">isSessionValid(tokenId)</a> ⇒ <code>Boolean</code></dt>
-<dd><p>Checks if the session that the tokenID represents is valid</p>
-</dd>
-<dt><a href="#authenticate">authenticate(options)</a></dt>
-<dd><p>Authenticates an identity using any authentication module
- The version of the AM should support the /json/authenticate endpoint.</p>
-</dd>
-<dt><a href="#authenticateSimple">authenticateSimple(options)</a></dt>
-<dd><p>Authenticates an identity using a one state authentication module by using 
-  the values submitted either in the form containing username and password or
-  by using credentials submitted in the headers object.
- The version of the AM should support the /json/authenticate endpoint.
- The realm, module or service can be specified but only modules and services 
- with one state are supported.</p>
-</dd>
-<dt><a href="#getIdentityAttributes">getIdentityAttributes(options)</a> ⇒ <code>JSON</code></dt>
-<dd><p>Obtains the values of the profile attributes specified as a comma separated list</p>
-</dd>
-<dt><a href="#logout">logout([options])</a> ⇒ <code>undefined</code></dt>
-<dd><p>Log out the user from the OpenAM</p>
-</dd>
-</dl>
+### Methods
 
-<a name="getMyURLDir"></a>
+#### <span class="type-signature"></span>authenticate<span class="signature">(options)</span><span class="type-signature"></span>
 
-## getMyURLDir() ⇒ <code>String</code>
-Gets the path/dir of the page running the script
+Authenticates an identity using any authentication module The version of the AM should support the /json/authenticate endpoint.
 
-**Kind**: global function  
-<a name="getMyURL"></a>
+##### Parameters:
 
-## getMyURL() ⇒ <code>String</code>
-Gets the URL of the page running the script
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>options</code></td>
+<td><span class="param-type">Object</span></td>
+<td>The configuration object to use
+<pre><code> The options object is a JSON object, here an example.  
+ {
+    module: &quot;DataStore&quot;,                                         // optional
+    service: &quot;ldapService&quot;,                                      // optional
+    realm: &quot;/&quot;,                                                  // optional
+    headers: &quot;http://ap.example.com:8880/exampleNRO02.html&quot;,     // optional
+    data: objectData                                             // optional
+ }   </code></pre>
+<h6 id="properties">Properties</h6>
+<table>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Attributes</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>module</code></td>
+<td><span class="param-type">String</span></td>
+<td>&lt;optional&gt;<br />
+</td>
+<td>OpenAM realm default</td>
+<td>The Authentication module to use in the left side of the login box.</td>
+</tr>
+<tr class="even">
+<td><code>service</code></td>
+<td><span class="param-type">String</span></td>
+<td>&lt;optional&gt;<br />
+</td>
+<td>OpenAM realm default</td>
+<td>The Authentication service chain to use in the left side of the login box. Notice that service takes precedence over module.</td>
+</tr>
+<tr class="odd">
+<td><code>realm</code></td>
+<td><span class="param-type">String</span></td>
+<td>&lt;optional&gt;<br />
+</td>
+<td>The one configured in openam.js</td>
+<td>Realm where the authentication will take place</td>
+</tr>
+<tr class="even">
+<td><code>headers</code></td>
+<td><span class="param-type">Object</span></td>
+<td></td>
+<td></td>
+<td>Object containing the credentials passed as headers</td>
+</tr>
+<tr class="odd">
+<td><code>data</code></td>
+<td><span class="param-type">Object</span></td>
+<td>&lt;optional&gt;<br />
+</td>
+<td>{}</td>
+<td>The payload to be submitted to the authentication module</td>
+</tr>
+</tbody>
+</table></td>
+</tr>
+</tbody>
+</table>
 
-**Kind**: global function  
-<a name="createCookie"></a>
+Source:  
+-   [openam.js](openam.js.html), [line 759](openam.js.html#line759)
 
-## createCookie(name, value, hours, domainName)
-Create a Cookie for the domain specified in domainName
+#### <span class="type-signature"></span>authenticateSimple<span class="signature">(options)</span><span class="type-signature"></span>
 
-**Kind**: global function  
+Authenticates an identity using a one state authentication module by using the values submitted either in the form containing username and password or by using credentials submitted in the headers object. The version of the AM should support the /json/authenticate endpoint. The realm, module or service can be specified but only modules and services with one state are supported.
 
-| Param | Type | Description |
-| --- | --- | --- |
-| name | <code>type</code> | Name of the cookie to be created |
-| value | <code>type</code> | Value for the cookie |
-| hours | <code>type</code> | Time that the cookie will exist |
-| domainName | <code>type</code> | Domain in which the cookie will be created |
+##### Parameters:
 
-<a name="deleteCookie"></a>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>options</code></td>
+<td><span class="param-type">Object</span></td>
+<td>The configuration object to use
+<pre><code> The options object is a JSON object, here an example.  
+ {
+    module: &quot;DataStore&quot;,                                         // optional
+    service: &quot;ldapService&quot;,                                      // optional
+    username: &#39;usernameField&#39;,                                   // optional
+    password: &#39;passwordField&#39;,                                   // optional
+    headers: myHeaders,                                          // optional
+    realm: &quot;/&quot;,                                                  // optional
+    gotoURL: &quot;https://app.example.com:8080/mypath&quot;,              // optional
+    gotoOnFail: &quot;https://app.example.com:8080/failed&quot;,           // optional
+ }   </code></pre>
+<h6 id="properties-1">Properties</h6>
+<table>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Attributes</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>module</code></td>
+<td><span class="param-type">String</span></td>
+<td>&lt;optional&gt;<br />
+</td>
+<td>OpenAM realm default</td>
+<td>The Authentication module to use in the left side of the login box.</td>
+</tr>
+<tr class="even">
+<td><code>service</code></td>
+<td><span class="param-type">String</span></td>
+<td>&lt;optional&gt;<br />
+</td>
+<td>OpenAM realm default</td>
+<td>The Authentication service chain to use in the left side of the login box. Notice that service takes precedence over module.</td>
+</tr>
+<tr class="odd">
+<td><code>username</code></td>
+<td><span class="param-type">String</span></td>
+<td>&lt;optional&gt;<br />
+</td>
+<td>'username'</td>
+<td>The id of the field that contains the username in the form. Either username and password or headers must be specified.</td>
+</tr>
+<tr class="even">
+<td><code>password</code></td>
+<td><span class="param-type">String</span></td>
+<td>&lt;optional&gt;<br />
+</td>
+<td>'password'</td>
+<td>The id of the field that contains the password in the form. Either username and password or headers must be specified.</td>
+</tr>
+<tr class="odd">
+<td><code>headers</code></td>
+<td><span class="param-type">Object</span></td>
+<td></td>
+<td></td>
+<td>Object containing the credentials passed as headers</td>
+</tr>
+<tr class="even">
+<td><code>realm</code></td>
+<td><span class="param-type">String</span></td>
+<td>&lt;optional&gt;<br />
+</td>
+<td>The one configured in openam.js</td>
+<td>Realm where the authentication will take place</td>
+</tr>
+<tr class="odd">
+<td><code>headers</code></td>
+<td><span class="param-type">Object</span></td>
+<td>&lt;optional&gt;<br />
+</td>
+<td></td>
+<td>Object containing the credentials passed as headers. Either username and password or headers must be specified.</td>
+</tr>
+<tr class="even">
+<td><code>gotoURL</code></td>
+<td><span class="param-type">String</span></td>
+<td>&lt;optional&gt;<br />
+</td>
+<td>Current page</td>
+<td>The URL to go to after a successful authentication.</td>
+</tr>
+<tr class="odd">
+<td><code>gotoOnFail</code></td>
+<td><span class="param-type">String</span></td>
+<td>&lt;optional&gt;<br />
+</td>
+<td>Current page</td>
+<td>The URL to go to after an authentication event has failed.</td>
+</tr>
+</tbody>
+</table></td>
+</tr>
+</tbody>
+</table>
 
-## deleteCookie(name, domainName)
-Deletes the coookie
+Source:  
+-   [openam.js](openam.js.html), [line 914](openam.js.html#line914)
 
-**Kind**: global function  
-**Deletecookie**:   
+#### <span class="type-signature"></span>authNRedirect<span class="signature">(options)</span><span class="type-signature"></span>
 
-| Param | Type | Description |
-| --- | --- | --- |
-| name | <code>type</code> | Name of the cookie to be deleted |
-| domainName | <code>type</code> | Domain where the cookie resides |
-
-<a name="getCookie"></a>
-
-## getCookie(name) ⇒ <code>String</code>
-Get's the value of the cookie specified
-
-**Kind**: global function  
-**Returns**: <code>String</code> - The value of the cookie  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| name | <code>type</code> | The name of the coookie whose value we want to retrieve |
-
-<a name="getLocal"></a>
-
-## getLocal(storageKey) ⇒ <code>type</code>
-Gets the value stored in the Local session store. Using the key specified by
-
-**Kind**: global function  
-**Returns**: <code>type</code> - data The value of the value retrieved  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| storageKey | <code>type</code> | The key of the value to retrive |
-
-<a name="storeLocal"></a>
-
-## storeLocal(storageKey, data)
-Stores a value "data" in the key "storageKey" in the local session storage
-
-**Kind**: global function  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| storageKey | <code>type</code> | The key to be used to store the value |
-| data | <code>type</code> | The value of the data to be stored |
-
-<a name="removeAlllocal"></a>
-
-## removeAlllocal() ⇒ <code>undefined</code>
-Removes the whole local session storage
-
-**Kind**: global function  
-<a name="debug"></a>
-
-## debug(message) ⇒ <code>undefined</code>
-Displays a message in the browser's console (if possible)
-
-**Kind**: global function  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| message | <code>type</code> | Message to display in the console |
-
-<a name="openamConfig"></a>
-
-## openamConfig(options) ⇒ <code>[openamConfig](#openamConfig)</code>
-OpenAM Configuration instance
-
-**Kind**: global function  
-**Returns**: <code>[openamConfig](#openamConfig)</code> - An instance of the OpenAM Configuration.  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| options | <code>Object</code> |  | The OpenAM Configuration JSON object. <pre>  Here an example.    {       baseurl: "http://openam1.example.com:8080/openam",       realm: "/",                                        // optional           cachetime: 3,                                      // optional        debugenabled: true                                 // optional  }    </pre> |
-| options.baseurl | <code>String</code> |  | The URL where OpenAM is running, example:   "https://openam.example.com:443/openam" |
-| [options.realm] | <code>String</code> | <code>The default realm for the baseurl used</code> | Name  of the realm to be used, example: "/" |
-| [options.cachetime] | <code>String</code> | <code>3</code> | Time in minutes the session valid response  and attributes are cached in the session store (if possible). To disable caching  set the time to 0. Example of caching for 3 minutes: 3 |
-| [options.debugenabled] | <code>String</code> | <code>false</code> | Enable debug, works for some browser,  not for all. Example: true |
-
-<a name="authNRedirect"></a>
-
-## authNRedirect(options)
 Redirects for authentication to an OpenAM using the Authentication module specified
 
-**Kind**: global function  
+##### Parameters:
 
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| options | <code>Object</code> |  | The configuration object to use <pre>  The options object is a JSON object, here an example.    {     openam: myOpenAMConfigObject,     module: "DataStore",                                         // optional     service: "ldapService",                                      // optional     gotoURL: "http://ap.example.com:8880/exampleNRO02.html",     // optional     gotoOnFail: "http://ap.example.com:8880/exampleNRO02.html",  // optional     classic: false,                                              // optional     windowed: true                                               // optional  }    </pre> |
-| options.openam | <code>Object</code> &#124; <code>String</code> |  | The OpenAM Configuration Object. This is  a mandatory attribute. See openam.js documentation for more information |
-| [options.module] | <code>String</code> | <code>OpenAM realm default</code> | The Authentication module   to use in the left side of the login box. |
-| [options.service] | <code>String</code> | <code>OpenAM realm default</code> | The Authentication service  chain to use in the left side of the login box. Notice that service takes   precedence over module. |
-| [options.gotoURL] | <code>String</code> | <code>Current page</code> | The URL to go to after a  successful authentication. |
-| [options.gotoOnFail] | <code>String</code> | <code>Current page</code> | The URL to go to after an authentication event has failed. |
-| [options.classic] | <code>String</code> | <code>false</code> | Boolean attribute to specify if we are  using the classic UI (true) or the XUI (false). Default is to use the XUI. |
-| [options.windowed] | <code>String</code> | <code>true</code> | Boolean attribute to specify if the  redirect will happen in a pop-up window or not. |
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>options</code></td>
+<td><span class="param-type">Object</span></td>
+<td>The configuration object to use
+<pre><code> The options object is a JSON object, here an example.  
+ {
+    openam: myOpenAMConfigObject,
+    module: &quot;DataStore&quot;,                                         // optional
+    service: &quot;ldapService&quot;,                                      // optional
+    gotoURL: &quot;http://ap.example.com:8880/exampleNRO02.html&quot;,     // optional
+    gotoOnFail: &quot;http://ap.example.com:8880/exampleNRO02.html&quot;,  // optional
+    classic: false,                                              // optional
+    windowed: true                                               // optional
+ }   </code></pre>
+<h6 id="properties-2">Properties</h6>
+<table>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Attributes</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>openam</code></td>
+<td><span class="param-type">Object</span> | <span class="param-type">String</span></td>
+<td></td>
+<td></td>
+<td>The OpenAM Configuration Object. This is a mandatory attribute. See openam.js documentation for more information</td>
+</tr>
+<tr class="even">
+<td><code>module</code></td>
+<td><span class="param-type">String</span></td>
+<td>&lt;optional&gt;<br />
+</td>
+<td>OpenAM realm default</td>
+<td>The Authentication module to use in the left side of the login box.</td>
+</tr>
+<tr class="odd">
+<td><code>service</code></td>
+<td><span class="param-type">String</span></td>
+<td>&lt;optional&gt;<br />
+</td>
+<td>OpenAM realm default</td>
+<td>The Authentication service chain to use in the left side of the login box. Notice that service takes precedence over module.</td>
+</tr>
+<tr class="even">
+<td><code>gotoURL</code></td>
+<td><span class="param-type">String</span></td>
+<td>&lt;optional&gt;<br />
+</td>
+<td>Current page</td>
+<td>The URL to go to after a successful authentication.</td>
+</tr>
+<tr class="odd">
+<td><code>gotoOnFail</code></td>
+<td><span class="param-type">String</span></td>
+<td>&lt;optional&gt;<br />
+</td>
+<td>Current page</td>
+<td>The URL to go to after an authentication event has failed.</td>
+</tr>
+<tr class="even">
+<td><code>classic</code></td>
+<td><span class="param-type">String</span></td>
+<td>&lt;optional&gt;<br />
+</td>
+<td>false</td>
+<td>Boolean attribute to specify if we are using the classic UI (true) or the XUI (false). Default is to use the XUI.</td>
+</tr>
+<tr class="odd">
+<td><code>windowed</code></td>
+<td><span class="param-type">String</span></td>
+<td>&lt;optional&gt;<br />
+</td>
+<td>true</td>
+<td>Boolean attribute to specify if the redirect will happen in a pop-up window or not.</td>
+</tr>
+</tbody>
+</table></td>
+</tr>
+</tbody>
+</table>
 
-<a name="isUserAuthenticated"></a>
+Source:  
+-   [openam.js](openam.js.html), [line 595](openam.js.html#line595)
 
-## isUserAuthenticated() ⇒ <code>Boolean</code>
-Checks if a user is authenticated
+#### <span class="type-signature"></span>createCookie<span class="signature">(name, value, hours, domainName)</span><span class="type-signature"></span>
 
-**Kind**: global function  
-**Returns**: <code>Boolean</code> - - True if a user is authenticated  
-<a name="isSessionValid"></a>
+Create a Cookie for the domain specified in domainName
 
-## isSessionValid(tokenId) ⇒ <code>Boolean</code>
-Checks if the session that the tokenID represents is valid
+##### Parameters:
 
-**Kind**: global function  
-**Returns**: <code>Boolean</code> - - True if the session is valid  
+| Name         | Type                                 | Description                                |
+|--------------|--------------------------------------|--------------------------------------------|
+| `name`       | <span class="param-type">type</span> | Name of the cookie to be created           |
+| `value`      | <span class="param-type">type</span> | Value for the cookie                       |
+| `hours`      | <span class="param-type">type</span> | Time that the cookie will exist            |
+| `domainName` | <span class="param-type">type</span> | Domain in which the cookie will be created |
 
-| Param | Type | Description |
-| --- | --- | --- |
-| tokenId | <code>String</code> | The SSO Token ID (a.k.a the identifier of the session) |
+Source:  
+-   [openam.js](openam.js.html), [line 80](openam.js.html#line80)
 
-<a name="authenticate"></a>
+#### <span class="type-signature"></span>debug<span class="signature">(message)</span><span class="type-signature"> → {undefined}</span>
 
-## authenticate(options)
-Authenticates an identity using any authentication module
- The version of the AM should support the /json/authenticate endpoint.
+Displays a message in the browser's console (if possible)
 
-**Kind**: global function  
+##### Parameters:
 
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| options | <code>Object</code> |  | The configuration object to use <pre>  The options object is a JSON object, here an example.    {     module: "DataStore",                                         // optional     service: "ldapService",                                      // optional     realm: "/",                                                  // optional     headers: "http://ap.example.com:8880/exampleNRO02.html",     // optional     data: objectData                                             // optional  }    </pre> |
-| [options.module] | <code>String</code> | <code>OpenAM realm default</code> | The Authentication module   to use in the left side of the login box. |
-| [options.service] | <code>String</code> | <code>OpenAM realm default</code> | The Authentication service  chain to use in the left side of the login box. Notice that service takes   precedence over module. |
-| [options.realm] | <code>String</code> | <code>The one configured in openam.js</code> | Realm where the   authentication will take place |
-| options.headers | <code>Object</code> |  | Object containing the credentials passed as headers |
-| [options.data] | <code>Object</code> | <code>{}</code> | The payload to be submitted to the authentication   module |
+| Name      | Type                                 | Description                       |
+|-----------|--------------------------------------|-----------------------------------|
+| `message` | <span class="param-type">type</span> | Message to display in the console |
 
-<a name="authenticateSimple"></a>
+Source:  
+-   [openam.js](openam.js.html), [line 232](openam.js.html#line232)
 
-## authenticateSimple(options)
-Authenticates an identity using a one state authentication module by using 
-  the values submitted either in the form containing username and password or
-  by using credentials submitted in the headers object.
- The version of the AM should support the /json/authenticate endpoint.
- The realm, module or service can be specified but only modules and services 
- with one state are supported.
+##### Returns:
 
-**Kind**: global function  
+ Type   
+<span class="param-type">undefined</span>
 
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| options | <code>Object</code> |  | The configuration object to use <pre>  The options object is a JSON object, here an example.    {     module: "DataStore",                                         // optional     service: "ldapService",                                      // optional     username: 'usernameField',                                   // optional     password: 'passwordField',                                   // optional     headers: myHeaders,                                          // optional     realm: "/",                                                  // optional     gotoURL: "https://app.example.com:8080/mypath",              // optional     gotoOnFail: "https://app.example.com:8080/failed",           // optional  }    </pre> |
-| [options.module] | <code>String</code> | <code>OpenAM realm default</code> | The Authentication module   to use in the left side of the login box. |
-| [options.service] | <code>String</code> | <code>OpenAM realm default</code> | The Authentication service  chain to use in the left side of the login box. Notice that service takes   precedence over module. |
-| [options.username] | <code>String</code> | <code>&#x27;username&#x27;</code> | The id of the field that  contains the username in the form. Either username and password or headers   must be specified. |
-| [options.password] | <code>String</code> | <code>&#x27;password&#x27;</code> | The id of the field that  contains the password in the form. Either username and password or headers   must be specified. |
-| options.headers | <code>Object</code> |  | Object containing the credentials passed  as headers |
-| [options.realm] | <code>String</code> | <code>The one configured in openam.js</code> | Realm where the   authentication will take place |
-| [options.headers] | <code>Object</code> |  | Object containing the credentials passed  as headers. Either username and password or headers must be specified. |
-| [options.gotoURL] | <code>String</code> | <code>Current page</code> | The URL to go to after a  successful authentication. |
-| [options.gotoOnFail] | <code>String</code> | <code>Current page</code> | The URL to go to after an authentication event has failed. |
+#### <span class="type-signature"></span>deleteCookie<span class="signature">(name, domainName)</span><span class="type-signature"></span>
 
-<a name="getIdentityAttributes"></a>
+Deletes the coookie
 
-## getIdentityAttributes(options) ⇒ <code>JSON</code>
+##### Parameters:
+
+| Name         | Type                                 | Description                      |
+|--------------|--------------------------------------|----------------------------------|
+| `name`       | <span class="param-type">type</span> | Name of the cookie to be deleted |
+| `domainName` | <span class="param-type">type</span> | Domain where the cookie resides  |
+
+Source:  
+-   [openam.js](openam.js.html), [line 109](openam.js.html#line109)
+
+#### <span class="type-signature"></span>getCookie<span class="signature">(name)</span><span class="type-signature"> → {String}</span>
+
+Get's the value of the cookie specified
+
+##### Parameters:
+
+| Name   | Type                                 | Description                                             |
+|--------|--------------------------------------|---------------------------------------------------------|
+| `name` | <span class="param-type">type</span> | The name of the coookie whose value we want to retrieve |
+
+Source:  
+-   [openam.js](openam.js.html), [line 114](openam.js.html#line114)
+
+##### Returns:
+
+The value of the cookie
+
+ Type   
+<span class="param-type">String</span>
+
+#### <span class="type-signature"></span>getIdentityAttributes<span class="signature">(options)</span><span class="type-signature"> → {JSON}</span>
+
 Obtains the values of the profile attributes specified as a comma separated list
 
-**Kind**: global function  
-**Returns**: <code>JSON</code> - - Returns the value of the profile attributes requested from the OpenAM  
+##### Parameters:
 
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| options | <code>Object</code> |  | The configuration object to get the attributes <pre>  The options object is a JSON object, here an example.    {     attributes: "cn, givenName,sn,mail",               realm: "/",                          // optional     prettyprint: true                    // optional  }    </pre> |
-| options.attributes | <code>String</code> |  | Comma separated list of attributes |
-| [options.realm] | <code>String</code> | <code>The one configured in openam.js</code> | Realm where   the identity resides. |
-| [options.prettyprint] | <code>Boolean</code> | <code>false</code> | Return formatted with pretty print(true or false) |
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>options</code></td>
+<td><span class="param-type">Object</span></td>
+<td>The configuration object to get the attributes
+<pre><code> The options object is a JSON object, here an example.  
+ {
+    attributes: &quot;cn, givenName,sn,mail&quot;,          
+    realm: &quot;/&quot;,                          // optional
+    prettyprint: true                    // optional
+ }   </code></pre>
+<h6 id="properties-3">Properties</h6>
+<table>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Attributes</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>attributes</code></td>
+<td><span class="param-type">String</span></td>
+<td></td>
+<td></td>
+<td>Comma separated list of attributes</td>
+</tr>
+<tr class="even">
+<td><code>realm</code></td>
+<td><span class="param-type">String</span></td>
+<td>&lt;optional&gt;<br />
+</td>
+<td>The one configured in openam.js</td>
+<td>Realm where the identity resides.</td>
+</tr>
+<tr class="odd">
+<td><code>prettyprint</code></td>
+<td><span class="param-type">Boolean</span></td>
+<td>&lt;optional&gt;<br />
+</td>
+<td>false</td>
+<td>Return formatted with pretty print(true or false)</td>
+</tr>
+</tbody>
+</table></td>
+</tr>
+</tbody>
+</table>
 
-<a name="logout"></a>
+Source:  
+-   [openam.js](openam.js.html), [line 1021](openam.js.html#line1021)
 
-## logout([options]) ⇒ <code>undefined</code>
+##### Returns:
+
+- Returns the value of the profile attributes requested from the OpenAM
+
+ Type   
+<span class="param-type">JSON</span>
+
+#### <span class="type-signature"></span>getLocal<span class="signature">(storageKey)</span><span class="type-signature"> → {type}</span>
+
+Gets the value stored in the Local session store. Using the key specified by
+
+##### Parameters:
+
+| Name         | Type                                 | Description                     |
+|--------------|--------------------------------------|---------------------------------|
+| `storageKey` | <span class="param-type">type</span> | The key of the value to retrive |
+
+Source:  
+-   [openam.js](openam.js.html), [line 137](openam.js.html#line137)
+
+##### Returns:
+
+data The value of the value retrieved
+
+ Type   
+<span class="param-type">type</span>
+
+#### <span class="type-signature"></span>getMyURL<span class="signature">()</span><span class="type-signature"> → {String}</span>
+
+Gets the URL of the page running the script
+
+Source:  
+-   [openam.js](openam.js.html), [line 67](openam.js.html#line67)
+
+##### Returns:
+
+ Type   
+<span class="param-type">String</span>
+
+#### <span class="type-signature"></span>getMyURLDir<span class="signature">()</span><span class="type-signature"> → {String}</span>
+
+Gets the path/dir of the page running the script
+
+Source:  
+-   [openam.js](openam.js.html), [line 55](openam.js.html#line55)
+
+##### Returns:
+
+ Type   
+<span class="param-type">String</span>
+
+#### <span class="type-signature"></span>isSessionValid<span class="signature">(tokenId)</span><span class="type-signature"> → {Boolean}</span>
+
+Checks if the session that the tokenID represents is valid
+
+##### Parameters:
+
+| Name      | Type                                   | Description                                            |
+|-----------|----------------------------------------|--------------------------------------------------------|
+| `tokenId` | <span class="param-type">String</span> | The SSO Token ID (a.k.a the identifier of the session) |
+
+Source:  
+-   [openam.js](openam.js.html), [line 708](openam.js.html#line708)
+
+##### Returns:
+
+- True if the session is valid
+
+ Type   
+<span class="param-type">Boolean</span>
+
+#### <span class="type-signature"></span>isUserAuthenticated<span class="signature">()</span><span class="type-signature"> → {Boolean}</span>
+
+Checks if a user is authenticated
+
+Source:  
+-   [openam.js](openam.js.html), [line 692](openam.js.html#line692)
+
+##### Returns:
+
+- True if a user is authenticated
+
+ Type   
+<span class="param-type">Boolean</span>
+
+#### <span class="type-signature"></span>logout<span class="signature">(options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> → {undefined}</span>
+
 Log out the user from the OpenAM
 
-**Kind**: global function  
+##### Parameters:
 
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| [options] | <code>Object</code> |  | The object describing the options for the logout <pre>  The options object is a JSON object, here an example.    {     gotoURL: "https://app.example.com:8080/mypath",              // optional     gotoOnFail: "https://app.example.com:8080/failed",           // optional  }    </pre> |
-| [options.gotoURL] | <code>String</code> | <code>Current page</code> | The URL to go to after a   successful authentication. |
-| [options.gotoOnFail] | <code>String</code> | <code>Current page</code> | The URL to go to after an     authentication event has failed. |
+<table>
+<colgroup>
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Attributes</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>options</code></td>
+<td><span class="param-type">Object</span></td>
+<td>&lt;optional&gt;<br />
+</td>
+<td>The object describing the options for the logout
+<pre><code> The options object is a JSON object, here an example.  
+ {
+    gotoURL: &quot;https://app.example.com:8080/mypath&quot;,              // optional
+    gotoOnFail: &quot;https://app.example.com:8080/failed&quot;,           // optional
+ }   </code></pre>
+<h6 id="properties-4">Properties</h6>
+<table>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Attributes</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>gotoURL</code></td>
+<td><span class="param-type">String</span></td>
+<td>&lt;optional&gt;<br />
+</td>
+<td>Current page</td>
+<td>The URL to go to after a successful authentication.</td>
+</tr>
+<tr class="even">
+<td><code>gotoOnFail</code></td>
+<td><span class="param-type">String</span></td>
+<td>&lt;optional&gt;<br />
+</td>
+<td>Current page</td>
+<td>The URL to go to after an authentication event has failed.</td>
+</tr>
+</tbody>
+</table></td>
+</tr>
+</tbody>
+</table>
 
+Source:  
+-   [openam.js](openam.js.html), [line 1121](openam.js.html#line1121)
+
+##### Returns:
+
+ Type   
+<span class="param-type">undefined</span>
+
+#### <span class="type-signature"></span>openamConfig<span class="signature">(options)</span><span class="type-signature"> → {[openamConfig](global.html#openamConfig)}</span>
+
+OpenAM Configuration instance
+
+##### Parameters:
+
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>options</code></td>
+<td><span class="param-type">Object</span></td>
+<td>The OpenAM Configuration JSON object.
+<pre><code> Here an example.  
+ {
+      baseurl: &quot;http://openam1.example.com:8080/openam&quot;,
+      realm: &quot;/&quot;,                                        // optional    
+      cachetime: 3,                                      // optional 
+      debugenabled: true                                 // optional
+ }   </code></pre>
+<h6 id="properties-5">Properties</h6>
+<table>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Type</th>
+<th>Attributes</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>baseurl</code></td>
+<td><span class="param-type">String</span></td>
+<td></td>
+<td></td>
+<td>The URL where OpenAM is running, example: &quot;https://openam.example.com:443/openam&quot;</td>
+</tr>
+<tr class="even">
+<td><code>realm</code></td>
+<td><span class="param-type">String</span></td>
+<td>&lt;optional&gt;<br />
+</td>
+<td>The default realm for the baseurl used</td>
+<td>Name of the realm to be used, example: &quot;/&quot;</td>
+</tr>
+<tr class="odd">
+<td><code>cachetime</code></td>
+<td><span class="param-type">String</span></td>
+<td>&lt;optional&gt;<br />
+</td>
+<td>3</td>
+<td>Time in minutes the session valid response and attributes are cached in the session store (if possible). To disable caching set the time to 0. Example of caching for 3 minutes: 3</td>
+</tr>
+<tr class="even">
+<td><code>debugenabled</code></td>
+<td><span class="param-type">String</span></td>
+<td>&lt;optional&gt;<br />
+</td>
+<td>false</td>
+<td>Enable debug, works for some browser, not for all. Example: true</td>
+</tr>
+</tbody>
+</table></td>
+</tr>
+</tbody>
+</table>
+
+Source:  
+-   [openam.js](openam.js.html), [line 336](openam.js.html#line336)
+
+##### Returns:
+
+An instance of the OpenAM Configuration.
+
+ Type   
+<span class="param-type">[openamConfig](global.html#openamConfig)</span>
+
+#### <span class="type-signature"></span>removeAlllocal<span class="signature">()</span><span class="type-signature"> → {undefined}</span>
+
+Removes the whole local session storage
+
+Source:  
+-   [openam.js](openam.js.html), [line 215](openam.js.html#line215)
+
+##### Returns:
+
+ Type   
+<span class="param-type">undefined</span>
+
+#### <span class="type-signature"></span>storeLocal<span class="signature">(storageKey, data)</span><span class="type-signature"></span>
+
+Stores a value "data" in the key "storageKey" in the local session storage
+
+##### Parameters:
+
+| Name         | Type                                 | Description                           |
+|--------------|--------------------------------------|---------------------------------------|
+| `storageKey` | <span class="param-type">type</span> | The key to be used to store the value |
+| `data`       | <span class="param-type">type</span> | The value of the data to be stored    |
+
+Source:  
+-   [openam.js](openam.js.html), [line 178](openam.js.html#line178)
+
+[Home](index.html)
+------------------
+
+### Global
+
+-   [authenticate](global.html#authenticate)
+-   [authenticateSimple](global.html#authenticateSimple)
+-   [authNRedirect](global.html#authNRedirect)
+-   [createCookie](global.html#createCookie)
+-   [debug](global.html#debug)
+-   [deleteCookie](global.html#deleteCookie)
+-   [getCookie](global.html#getCookie)
+-   [getIdentityAttributes](global.html#getIdentityAttributes)
+-   [getLocal](global.html#getLocal)
+-   [getMyURL](global.html#getMyURL)
+-   [getMyURLDir](global.html#getMyURLDir)
+-   [isSessionValid](global.html#isSessionValid)
+-   [isUserAuthenticated](global.html#isUserAuthenticated)
+-   [logout](global.html#logout)
+-   [openamConfig](global.html#openamConfig)
+-   [removeAlllocal](global.html#removeAlllocal)
+-   [storeLocal](global.html#storeLocal)
+
+Documentation generated by [JSDoc 3.4.0](https://github.com/jsdoc3/jsdoc) and converted with [pandoc](https://github.com/jgm/pandoc)
