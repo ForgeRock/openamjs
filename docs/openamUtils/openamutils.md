@@ -1,16 +1,18 @@
 [OpenAMUtils.js Documentation](openamUtils.md)
 ======
 
+openamUtils.js is another wrapper to render configurable Login Buttons and Login Boxes using OpenAM. It requires openam.js and the css style contained in this repository, of course you can adjust the css to your needs but it should work nicely out of the box. This wrapper does not need JQuery, but of course you can combine it with any other JS UI framework.
+
 
 ### Table of Contents
 
--   [addSocial](global.html#addSocial)
--   [authenticateUser](global.html#authenticateUser)
--   [formShow](global.html#formShow)
--   [printLoginBox](global.html#printLoginBox)
--   [printLoginButton](global.html#printLoginButton)
--   [printLogoutButton](global.html#printLogoutButton)
--   [printWelcomeAndLogout](global.html#printWelcomeAndLogout)
+-   [addSocial](#addsocialoptions--string)
+-   [authenticateUser](#authenticateuseroptions--boolean)
+-   [formShow](#formshowshow)
+-   [printLoginBox](#printloginboxelement-options)
+-   [printLoginButton](#printloginbuttonelement-options)
+-   [printLogoutButton](#printlogoutbuttonelement-options)
+-   [printWelcomeAndLogout](#printwelcomeandlogoutelement-options--undefined)
 
 ### Methods
 
