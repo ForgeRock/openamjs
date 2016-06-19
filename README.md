@@ -4,19 +4,23 @@
 **This code is not supported by ForgeRock and it is your responsibility to verify that the software is suitable and safe for use.**
 
 ##About
-A small JavaScript wrapper to do basic REST API calls to OpenAM
+A couple of small JavaScript wrappers to do basic REST API calls to OpenAM.
 
 ## Synopsis
-openam.js is a small library/wrapper of some of the REST APIs of OpenAM.
-The intention is to provide an easy way to integrate the calls in your Client JavaScript code without needing to implement the REST code yourself
+**openam.js** is a small library/wrapper of some of the REST APIs of OpenAM.
+The intention is to provide an easy way to integrate the calls in your Client JavaScript code without needing to implement the REST code yourself.
+
+**openamUtils.js** is another wrapper to render configurable Login Buttons and Login Boxes. It uses openam.js and the css style contained in this repository, of course you can adjust the css to your needs but it should work nicely out of the box. This wrapper does not need JQuery, but of course you can combine it with any other JS UI framework. 
 
 This is a work in progress, and also a JavaScript coding exercise. 
+Initially it is leveraging the Authentication and SSO API's but it can be extended to cover the whole set of APIs, inclulding Authorization, OAuth2, OIDC, UMA, STS, etc. with a little help of the community.
+
 This is a community work and it is NOT supported NOR endorsed by ForgeRock. If you feel it is useful, please contribute.
 
 ## Motivation
 I wanted an easy way to integrate the OpenAM REST calls in JavaScript client code.
 The implementation here uses XMLHttpRequest or ActiveXObject (hence it might not work in some browsers), but I have tested it in modern ones.
-I can tell you that IE7 does not support CORS and in some cases when using the library you will be accessing an external domain (the OpenAM)
+I can tell you that IE7 does not support CORS and in some cases when using the library you will be accessing an external domain (the OpenAM).
 
 
 ## Installation
@@ -44,9 +48,9 @@ Configure also the social authentication in your OpenAM if you want to see some 
 
 ## Documentation
 
-The documentation for openam.js can be found under the docs folder (i.e. [here](/docs/openamjs.md))
+The documentation for openam.js can be found under the docs folder (i.e. [here](/docs/openamjs/openamjs.md))
 
-The documentation for openamUtils.js can be found under the docs folder (i.e. [here](/docs/openamUtils.md))
+The documentation for openamUtils.js can be found under the docs folder (i.e. [here](/docs/openamutils/openamutils.md))
 
 You can also take a look to the examples described above.
 
