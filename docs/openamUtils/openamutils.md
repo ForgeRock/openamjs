@@ -6,68 +6,12 @@ openamUtils.js is another wrapper to render configurable Login Buttons and Login
 
 ### Table of Contents
 
--   [addSocial](#addsocialoptions--string)
--   [authenticateUser](#authenticateuseroptions--boolean)
--   [formShow](#formshowshow)
 -   [printLoginBox](#printloginboxelement-options)
 -   [printLoginButton](#printloginbuttonelement-options)
 -   [printLogoutButton](#printlogoutbuttonelement-options)
 -   [printWelcomeAndLogout](#printwelcomeandlogoutelement-options--undefined)
 
 ### Methods
-
-#### <span class="type-signature"></span>addSocial<span class="signature">(options)</span><span class="type-signature"> → {String}</span>
-
-Add the social modules buttons represented by the comma separated list
-
-##### Parameters:
-
-| Name      | Type                                   | Description                                                                                                                                                                                                                 |
-|-----------|----------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `options` | <span class="param-type">Object</span> | An object containing the options to use. This could be the OOTB socialImplementations that come when querying the OpenAM serverinfo URL or a manually described object that should be called overrideSocialImplementations. |
-
-Source:  
--   [openamUtils.js](openamUtils.js.html), [line 162](openamUtils.js.html#line162)
-
-##### Returns:
-
-Returns a table with the buttons
-
- Type   
-<span class="param-type">String</span>
-
-#### <span class="type-signature"></span>authenticateUser<span class="signature">(options)</span><span class="type-signature"> → {Boolean}</span>
-
-Performs the authentication of the user using the form "options.formId" passed in the object options
-
-##### Parameters:
-
-| Name      | Type                                   | Description                                           |
-|-----------|----------------------------------------|-------------------------------------------------------|
-| `options` | <span class="param-type">Object</span> | The options to be used for the authentication process |
-
-Source:  
--   [openamUtils.js](openamUtils.js.html), [line 76](openamUtils.js.html#line76)
-
-##### Returns:
-
-false
-
- Type   
-<span class="param-type">Boolean</span>
-
-#### <span class="type-signature"></span>formShow<span class="signature">(show)</span><span class="type-signature"></span>
-
-Shows or hides the loginBox, i.e. it gives the slide down and up effect
-
-##### Parameters:
-
-| Name   | Type                                    | Description                            |
-|--------|-----------------------------------------|----------------------------------------|
-| `show` | <span class="param-type">Boolean</span> | True if the loginbox wants to be shown |
-
-Source:  
--   [openamUtils.js](openamUtils.js.html), [line 143](openamUtils.js.html#line143)
 
 #### <span class="type-signature"></span>printLoginBox<span class="signature">(element, options)</span><span class="type-signature"></span>
 
