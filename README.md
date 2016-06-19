@@ -50,7 +50,7 @@ Configure also the social authentication in your OpenAM if you want to see some 
 
 The documentation for openam.js can be found under the docs folder (i.e. [here](/docs/openamjs/openamjs.md))
 
-The documentation for openamUtils.js can be found under the docs folder (i.e. [here](/docs/openamutils/openamutils.md))
+The documentation for openamUtils.js can be found under the docs folder (i.e. [here](/docs/openamUtils/openamutils.md))
 
 You can also take a look to the examples described above.
 
