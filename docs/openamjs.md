@@ -768,7 +768,7 @@ Source:
 -   [getMyURLDir](global.html#getMyURLDir)
 -   [isSessionValid](global.html#isSessionValid)
 -   [isUserAuthenticated](global.html#isUserAuthenticated)
--   [logout](global.html#logout)
+-   [logout](#logoutoptionsopt--undefined)
 -   [openamConfig](global.html#openamConfig)
 -   [removeAlllocal](global.html#removeAlllocal)
 -   [storeLocal](global.html#storeLocal)
