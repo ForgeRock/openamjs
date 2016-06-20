@@ -34,10 +34,17 @@ To try these examples you just need a web container, it could be an apache web s
 * **example0.html**: A web page that uses openam.js in a very simple way. It uses the `openam.authenticateSimple( { module: 'DataStore'} )` method to submit the credentials captured in an HTML form. It also uses the `openam.logout()` method.
 * **example1.html**: Similar to example0.html, except that it redirects to OpenAM using a window on top of the current web page. It uses the `authNRedirect({module: 'DataStore'}) ` and the `openam.logout()` methods.
 * **example2.html**: Similar to example1.html, except that it redirects to OpenAM using a window on top of the current web page. It uses the `authNRedirect({service: 'FRAuthChain'}) ` and `openam.logout()` methods. In this example the FRAuthChain is an authentication chain containing the DataStore and the ForgeRock Authenticator (Multifactor).
-* **example3.html**: This example uses both openam.js and openamUtils.js. It displays a login button that can be used very much in the same form as the examples 1 and 1.1. For logout it uses a logout button. This buttons are rendered by functions in openamUtils.js. openamUtils.css is also needed, as shown in the example. 
-* **example4.html**: This example uses both openam.js, openamUtils.js, and also the openamUtils.css. It displays a login box that is rendered based on the information provided by your OpenAM, i.e. if you have configured social authentication modules with the wizard in OpenAM, they will also be displayed in your box. The authentication chain or module to use in the form can be configured as part of the options, in this example we use the minimal 'configuration'.
-* **example5.html**: This example is similar to example3.html, except that we add a service parameter, using 'FRAuthChain' to make it multifactor and we add another css layout. 
+* **example3.html**: This example uses both openam.js and openamUtils.js. It displays a login button that can be used very much in the same form as the examples 1 and 1.1. It uses the method `printLoginButton("myloginButton", {openam: myOpenam})` to render the button. For logout it uses a logout button rendered by the method `printLogoutButton("myLogoutButton", {openam: myOpenam})`. This buttons are rendered by functions in openamUtils.js. openamUtils.css is also needed, as shown in the example. 
+* **example4.html**: This example uses both openam.js, openamUtils.js, and also the openamUtils.css. It displays a login box that is rendered based on the information provided by your OpenAM, i.e. if you have configured social authentication modules with the wizard in OpenAM, they will also be displayed in your box. It uses the method `printLoginBox("myLoginButton", {openam: myOpenam});` to render the login box. The authentication chain or module to use in the form can be configured as part of the options in the method, in this example we use the minimal 'configuration'.
+* **example5.html**: This example is similar to example3.html, except that we add a service parameter, using 'FRAuthChain', i.e. `printLoginBox("myLoginBox", {openam: myOpenam, service: 'FRAuthChain'})` to make it multifactor and we add another css layout. 
 * **example6.html**: This example is similar to example3 and example4, except that we override the social authentication information with our own definition. 
+          ``printLoginBox("myLoginBox", { 
+                    width: '500px',
+                    height: '280px',
+                    openam: myOpenam,
+                    service: 'FRAuthChain',
+                    overrideSocialImplementations: socialImplementations
+                    });``
 
 
 One of the requirements for the examples above is to have your OpenAM properly configured. 
