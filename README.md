@@ -37,17 +37,20 @@ To try these examples you just need a web container, it could be an apache web s
 * **example3.html**: This example uses both openam.js and openamUtils.js. It displays a login button that can be used very much in the same form as the examples 1 and 1.1. It uses the method printLoginButton to render the button:
 <pre><code>
 	`<div id="myLoginButton" style="float: right;"></div>`
+	...
 	printLoginButton("myloginButton", {openam: myOpenam});
 	</code></pre>
 For logout it uses a logout button rendered by the method printLogoutButton
 <pre><code>
 `<div id="myLogoutButton" style="float: right;"></div>`
+...
 `printLogoutButton("myLogoutButton", {openam: myOpenam});`
 </code></pre>
 These buttons are rendered by functions in openamUtils.js. openamUtils.css is also needed, as shown in the example. 
 * **example4.html**: This example uses both openam.js, openamUtils.js, and also the openamUtils.css. It displays a login box that is rendered based on the information provided by your OpenAM, i.e. if you have configured social authentication modules with the wizard in OpenAM, they will also be displayed in your box. It uses the method printLoginBox to render the login box. 
 <pre><code>
 `<div id="myLoginButton" style="float: right;"></div>`
+...
 `printLoginBox("myLoginButton", {openam: myOpenam});`
 </code></pre>
 The authentication chain or module to use in the form can be configured as part of the options in the method, in this example we use the minimal 'configuration'.
@@ -56,10 +59,15 @@ The authentication chain or module to use in the form can be configured as part 
 `<div id="myLoginBox">
      <!-- The Login box will appear here -->
  </div>`
+ ...
 `printLoginBox("myLoginBox", {openam: myOpenam, service: 'FRAuthChain'});`
 </code></pre>
 * **example6.html**: This example is similar to example3 and example4, except that we override the social authentication information with our own definition. 
           <pre><code>
+          `<div id="myLoginBox">
+     			<!-- The Login box will appear here -->
+ 		  </div>`
+ 		  ... 
           socialImplementations = [{
                     "authnChain": "GoogleSocialAuthenticationService",
                     "displayName": "Google",
@@ -93,6 +101,7 @@ The authentication chain or module to use in the form can be configured as part 
                     "buttonText": ''
                 }
             ];
+            ...
             printLoginBox("myLoginBox", { 
                     width: '500px',
                     height: '280px',
