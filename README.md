@@ -38,13 +38,48 @@ To try these examples you just need a web container, it could be an apache web s
 * **example4.html**: This example uses both openam.js, openamUtils.js, and also the openamUtils.css. It displays a login box that is rendered based on the information provided by your OpenAM, i.e. if you have configured social authentication modules with the wizard in OpenAM, they will also be displayed in your box. It uses the method `printLoginBox("myLoginButton", {openam: myOpenam});` to render the login box. The authentication chain or module to use in the form can be configured as part of the options in the method, in this example we use the minimal 'configuration'.
 * **example5.html**: This example is similar to example3.html, except that we add a service parameter, using 'FRAuthChain', i.e. `printLoginBox("myLoginBox", {openam: myOpenam, service: 'FRAuthChain'})` to make it multifactor and we add another css layout. 
 * **example6.html**: This example is similar to example3 and example4, except that we override the social authentication information with our own definition. 
-          ``printLoginBox("myLoginBox", { 
+          <pre><code>
+          socialImplementations = [{
+                    "authnChain": "GoogleSocialAuthenticationService",
+                    "displayName": "Google",
+                    "iconPath": "images/google.png",
+                    "imgStyle": "display: block; max-width: 70% !important;",
+                    "valid": true,
+                    "buttonText": ''
+                },
+                {
+                    "authnChain": "MicrosoftSocialAuthenticationService",
+                    "displayName": "Microsoft",
+                    "iconPath": "images/msn.png",
+                    "imgStyle": "display: block; max-width: 70% !important;",
+                    "valid": true,
+                    "buttonText": ''
+                },
+                {
+                    "authnChain": "FacebookSocialAuthenticationService",
+                    "displayName": "Facebook",
+                    "iconPath": "images/facebook.png",
+                    "valid": true,
+                    "imgStyle": "display: block; max-width: 70% !important;",
+                    "buttonText": ''
+                },
+                {
+                    "authnChain": "linkedInService",
+                    "displayName": "LinkedIn",
+                    "iconPath": "images/linkedin.png",
+                    "imgStyle": "display: block; max-width: 70% !important;",
+                    "valid": true,
+                    "buttonText": ''
+                }
+            ];
+            printLoginBox("myLoginBox", { 
                     width: '500px',
                     height: '280px',
                     openam: myOpenam,
                     service: 'FRAuthChain',
                     overrideSocialImplementations: socialImplementations
-                    });``
+                    });
+            </code></pre>
 
 
 One of the requirements for the examples above is to have your OpenAM properly configured. 
