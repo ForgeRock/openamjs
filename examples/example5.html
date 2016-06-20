@@ -11,39 +11,26 @@
         <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
         <META HTTP-EQUIV="Expires" CONTENT="-1">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link rel="stylesheet" href="css/demostyles.css" type="text/css">
+        <link rel="stylesheet" href="css/openamUtils2.css" type="text/css">
         <script type="text/javascript" src="openam.js"></script>
-        <script type="text/javascript" src="utils.js"></script>
+        <script type="text/javascript" src="openamUtils.js"></script>
     </head>
 
     <body class="NAPAStyle">
-                
-        <script type="text/javascript">
-
-            // Configure the OpenAM connection
-            var openam = new openamConfig(
-                    "http://openam1.example.com:8080/openam", // openam base url
-                    "/",                                      // default realm
-                    true,                                     // cache Enabled?
-                    true);                                    // Is debug enabled?
-                    // false);                        // To DO: Is legacy enabled?
-        </script>
-
+        
         <div id="header">
             <img class="image-float-left" alt="OpenAM" src="images/ForgeRock_Logo.png"> 
 
-            <div id="loginBox">
-                <!-- The Login box will appear here by invoking loginBox(true[false]); -->
+            <div id="myLoginBox">
+                <!-- The Login box will appear here -->
             </div>
 
             <div id="welcomeAndLogout">
-                <!-- The Logout button and greetings to the user 
-                will appear here by invoking welcomeAndLogout(); -->
+                <!-- The Logout button and greetings to the user  -->
+                <div id="myWelcome" style="float: left;"></div>
+                <div id="myLogoutButton"></div>
             </div>
-            
-
-        </div>
-        <!-- The header ends here -->
+        </div> <!-- The header ends here -->
 
 
         <div id="franja">
@@ -63,17 +50,28 @@
         </div>  
 
         <script type="text/javascript">
-            if (openam.isUserAuthenticated()) {
+                        // Configure the OpenAM connection
+            var myOpenam = new openamConfig(
+                {   baseurl: "http://openam1.example.com:8080/openam", 
+                    cachetime: 3,
+                    debugenabled: true
+                }
+            );
+            if (myOpenam.isUserAuthenticated()) {
                 // get the attributes you want to use
-                attributes_ = openam.getIdentityAttributes("mail,givenName,sn,cn,phoneNumber");
+                attributes_ = myOpenam.getIdentityAttributes( {
+                    attributes: "mail,givenName,sn,cn,phoneNumber",
+                    prettyprint: true
+                });
                 // display the attributes
-                document.getElementById("attributeWdw").innerHTML = printAllStuff(attributes_);
-                // display welcome message
-                welcomeAndLogout();
+                document.getElementById("attributeWdw").innerHTML = "<pre>" + attributes_ + "</pre>";
+                // display welcome message and logout button
+                printWelcome("myWelcome", {openam: myOpenam});
+                printLogoutButton("myLogoutButton", {openam: myOpenam});
             } else {
                 document.getElementById("attributeWdw").innerHTML = "<br>You are not authenticated";
                 // Login Box without social authentication (false)
-                loginBox(false); 
+                printLoginBox("myLoginBox", {openam: myOpenam, service: 'FRAuthChain'});
             }
         </script>
 

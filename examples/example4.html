@@ -1,0 +1,51 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <title>Example page that uses OpenAM</title>
+        <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+        <META HTTP-EQUIV="Expires" CONTENT="-1">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="css/openamUtils.css" type="text/css">
+        <script type="text/javascript" src="openam.js"></script>
+        <script type="text/javascript" src="openamUtils.js"></script>
+    </head>
+
+    <body>
+        <div id="myWelcome">Hello there, you are not authenticated yet.
+            Please login first</div>
+        <div id="myLogoutButton" style="float: right;"></div>
+        <div id="myLoginButton" style="float: right;"></div>
+        <p id="attr1" style="float: left;"></p>
+
+        <script type="text/javascript">
+            var myOpenam = new openamConfig(
+                    {
+                        baseurl: "http://openam1.example.com:8080/openam",
+                        realm: "/",
+                        cachetime: 3,
+                        debugenabled: true
+                    }
+            );
+
+            if (myOpenam.isUserAuthenticated()) { // The user is authenticated
+                // Welcome the user by name
+                printWelcome("myWelcome", {openam: myOpenam});
+                // Render the logout button
+                printLogoutButton("myLogoutButton", {openam: myOpenam});
+                // Add some attributes in the screen
+                attributes_ = myOpenam.getIdentityAttributes(
+                        {
+                            attributes: "cn,givenName,sn,mail,phoneNumber",
+                            prettyprint: true
+                        });
+                document.getElementById("attr1").innerHTML = "<pre>" + attributes_ + "</pre>";
+            } else {  // The user is not authenticated
+                // Render a Login Box
+                printLoginBox("myLoginButton", {openam: myOpenam});
+            }
+        </script>
+    </body>
+
+</html>

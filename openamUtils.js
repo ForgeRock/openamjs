@@ -33,6 +33,7 @@
  *     openam: myOpenAM,
  *     message: "Welcome Mr. "
  * }
+ * </pre>
  * @param {Object} options.openam - The OpenAM Configuration Object. This is
  *  a mandatory attribute. See openam.js documentation for more information
  * @param {String} options.message - The message to be shown as Welcome to the 
@@ -72,7 +73,7 @@ function middleBar() {
     return table1;
 }
 
-/**
+/*
  *  Performs the authentication of the user using the form "options.formId" passed
  *  in the object options
  * @function authenticateUser
@@ -139,7 +140,7 @@ function authenticateUser(options) {
     return false;
 }
 
-/**
+/*
  * Shows or hides the loginBox, i.e. it gives the slide down and up effect
  * @function formShow
  * @param {Boolean} show True if the loginbox wants to be shown
@@ -158,7 +159,7 @@ function formShow(show) {
     }
 }
 
-/**
+/*
  * Add the social modules buttons represented by the comma separated list
  * @function addSocial
  * @param {Object} options - An object containing the options to use. This could be the OOTB

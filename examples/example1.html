@@ -1,0 +1,58 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <title>Example page that uses OpenAM</title>
+        <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+        <META HTTP-EQUIV="Expires" CONTENT="-1">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript" src="openam.js"></script>
+    </head>
+
+    <body>
+        <div id="div1">  <!-- This div contains the login form -->
+            Hello there. You are not authenticated. Please
+            <a href="#" onclick="myOpenam.authNRedirect({module: 'DataStore'});"> Login</a>
+        </div>
+        <div id="div2">  <!-- This div contains greetings and user info -->
+            Welcome <span id="span1" style="font-weight: bold;">USER</span>
+            <a href="#" onclick="myOpenam.logout();"  style="float: right;">
+                Logout
+            </a>
+            <br>
+            <p id="attr1" style="float: left;">Identity Attributes</p>
+        </div>
+
+        <!-- Here the script -->
+        <script type="text/javascript">
+            var myOpenam = new openamConfig(
+                    {
+                        baseurl: "http://openam1.example.com:8080/openam",
+                        realm: "/",
+                        cachetime: 3,
+                        debugenabled: true
+                    }
+            );
+
+            if (myOpenam.isUserAuthenticated()) { // The user is authenticated
+                // Show the div with all the greetings and attributes
+                document.getElementById("div2").style.display = "block";
+                // Welcome the user by name
+                document.getElementById("span1").innerHTML = myOpenam.Id;
+                // Hide the form since we don't need it
+                document.getElementById("div1").style.display = "none";
+                // Let's bring some attributes from the authenticated user
+                document.getElementById("attr1").innerHTML = "<pre>" +
+                        myOpenam.getIdentityAttributes({
+                            attributes: "cn,givenName,sn,mail,phoneNumber", prettyprint: true})
+                        + "</pre>";
+            } else {  // The user is not authenticated
+                // Show the div with the login form
+                document.getElementById("div2").style.display = "none";
+                // Hide the div with greetings and (missing) user info
+                document.getElementById("div1").style.display = "block";
+            }
+        </script>
+    </body>
+</html>
