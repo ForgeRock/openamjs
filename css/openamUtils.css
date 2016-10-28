@@ -1,21 +1,42 @@
-/* 
-* The contents of this file are subject to the terms of the Common Development and
-* Distribution License (the License). You may not use this file except in compliance with the
-* License.
-*
-* You can obtain a copy of the License at legal/CDDLv1.0.txt. See the License for the
-* specific language governing permission and limitations under the License.
-*
-* When distributing Covered Software, include this CDDL Header Notice in each file and include
-* the License file at legal/CDDLv1.0.txt. If applicable, add the following below the CDDL
-* Header, with the fields enclosed by brackets [] replaced by your own identifying
-* information: "Portions copyright [year] [name of copyright owner]".
-*
-* Copyright 2014-2016 ForgeRock AS.
-*/
-
-/* 
-* CSS used in conjunction with the utils.js 
+/*
+ * Copyright © 2016 ForgeRock, AS.
+ *
+ * This is unsupported code made available by ForgeRock for community development
+ * subject to the license detailed below. The code is provided on an "as is" basis,
+ * without warranty of any kind, to the fullest extent permitted by law.
+ *
+ * ForgeRock does not warrant or guarantee the individual success developers may
+ * have in implementing the code on their development platforms or in production
+ * configurations.
+ *
+ * ForgeRock does not warrant, guarantee or make any representations regarding the
+ * use, results of use, accuracy, timeliness or completeness of any data or
+ * information relating to the alpha release of unsupported code. ForgeRock
+ * disclaims all warranties, expressed or implied, and in particular, disclaims all
+ * warranties of merchantability, and warranties related to the code, or any
+ * service or software related thereto.
+ *
+ * ForgeRock shall not be liable for any direct, indirect or consequential damages
+ * or costs of any type arising out of any action taken by you or others related to
+ * the code.
+ *
+ * The contents of this file are subject to the terms of the Common Development and
+ * Distribution License (the License). You may not use this file except in
+ * compliance with the License.
+ *
+ * You can obtain a copy of the License at https://forgerock.org/cddlv1-0/. See the
+ * License for the specific language governing permission and limitations under the
+ * License.
+ *
+ * When distributing Covered Software, include this CDDL Header Notice in each file
+ * and include the License file at https://forgerock.org/cddlv1-0/. If applicable,
+ * add the following below the CDDL Header, with the fields enclosed by brackets []
+ * replaced by your own identifying information: "Portions copyright [year] [name
+ * of copyright owner]".
+ */
+ 
+/*
+* CSS used in conjunction with the utils.js
 * Part of the examples for the openam.js
  * Author: Identity Wrestler
  * Notice: This is not suported/maintained/endorsed by ForgeRock
@@ -37,50 +58,50 @@ a.link { color: #FFFFFF; text-decoration: underline;
     text-align: center;
     color: black;
     height: 11px;
-    -moz-border-radius: 8px;  
-    -webkit-border-radius: 8px; 
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
     border-radius: 8px;
-}  
+}
 
 #login1 {
     font-family: Arial, Verdana, Geneva,sans-serif;
     font-size: 11pt;
-    -moz-border-radius: 8px;  
-    -webkit-border-radius: 8px; 
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
     border-radius: 8px;
     width: 620px;
     height: 270px;
     float: right;
     background: #dddddd;
     z-index: 1000; /* high z-index */
-} 
+}
 
-/*.socialButton { 
+/*.socialButton {
     display: block; width: 80px !important; text-align: center !important;
-    -webkit-border-radius: 6px; 
-    -moz-border-radius: 6px; 
-    border-radius: 6px; 
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
     border: 1px solid darkgrey;
     background-color: #fafafa;
-    padding-left: 25px; 
-    padding-right: 25px; 
+    padding-left: 25px;
+    padding-right: 25px;
     padding-top: 3px;
     padding-bottom: 3px;
-} 
+}
 
 .socialButton:hover {
     text-decoration: none;
-    background-color: #aaa; 
+    background-color: #aaa;
 }
 
 .socialButton:active {
     margin-top: 1px;
 }*/
 
-.loginButton { 
+.loginButton {
     display: block; text-align: center;
     border: 1px solid white;
-} 
+}
 
 .loginButton:hover {
     border: 1px solid darkgray;
@@ -188,17 +209,17 @@ input[type=submit]:hover {
 :-moz-placeholder { /* Firefox 18- */
    font-size: 14px;
    font-family: Arial;
-   color: grey;  
+   color: grey;
 }
 
 ::-moz-placeholder {  /* Firefox 19+ */
    font-size: 14px;
    font-family: Arial;
-   color: grey;  
+   color: grey;
 }
 
-:-ms-input-placeholder {  
+:-ms-input-placeholder {
    font-size: 14px;
    font-family: Arial;
-   color: grey;  
+   color: grey;
 }

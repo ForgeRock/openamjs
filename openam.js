@@ -1,20 +1,41 @@
-/* 
-* The contents of this file are subject to the terms of the Common Development and
- * Distribution License (the License). You may not use this file except in compliance with the
+/*
+ * Copyright © 2016 ForgeRock, AS.
+ *
+ * This is unsupported code made available by ForgeRock for community development
+ * subject to the license detailed below. The code is provided on an "as is" basis,
+ * without warranty of any kind, to the fullest extent permitted by law.
+ *
+ * ForgeRock does not warrant or guarantee the individual success developers may
+ * have in implementing the code on their development platforms or in production
+ * configurations.
+ *
+ * ForgeRock does not warrant, guarantee or make any representations regarding the
+ * use, results of use, accuracy, timeliness or completeness of any data or
+ * information relating to the alpha release of unsupported code. ForgeRock
+ * disclaims all warranties, expressed or implied, and in particular, disclaims all
+ * warranties of merchantability, and warranties related to the code, or any
+ * service or software related thereto.
+ *
+ * ForgeRock shall not be liable for any direct, indirect or consequential damages
+ * or costs of any type arising out of any action taken by you or others related to
+ * the code.
+ *
+ * The contents of this file are subject to the terms of the Common Development and
+ * Distribution License (the License). You may not use this file except in
+ * compliance with the License.
+ *
+ * You can obtain a copy of the License at https://forgerock.org/cddlv1-0/. See the
+ * License for the specific language governing permission and limitations under the
  * License.
  *
- * You can obtain a copy of the License at legal/CDDLv1.0.txt. See the License for the
- * specific language governing permission and limitations under the License.
- *
- * When distributing Covered Software, include this CDDL Header Notice in each file and include
- * the License file at legal/CDDLv1.0.txt. If applicable, add the following below the CDDL
- * Header, with the fields enclosed by brackets [] replaced by your own identifying
- * information: "Portions copyright [year] [name of copyright owner]".
- *
- * Copyright 2014-2016 ForgeRock AS.
+ * When distributing Covered Software, include this CDDL Header Notice in each file
+ * and include the License file at https://forgerock.org/cddlv1-0/. If applicable,
+ * add the following below the CDDL Header, with the fields enclosed by brackets []
+ * replaced by your own identifying information: "Portions copyright [year] [name
+ * of copyright owner]".
  */
 
-/* Some useful wrappers around the OpenAM APIs 
+/* Some useful wrappers around the OpenAM APIs
  * To be extended further
  * openam.js (v0.1)
  * Author: Identity Wrestler
@@ -22,7 +43,7 @@
  */
 
 // TO DO: The Legacy Functions are not implemented yet.
-    
+
 // Some global variables
 var debugEnabled = false;
 var storageExist = ("sessionStorage" in window && window.sessionStorage);
@@ -45,7 +66,7 @@ var openWindow = function (url, h) {
                 clearInterval(id);
                 win.opener.location.replace(loc);
                 win.close();
-            } 
+            }
         } catch (ex1) {
             // Do nothing
         };
@@ -63,7 +84,7 @@ function getMyURLDir() {
             window.location.port +
             loc.substring(0, loc.lastIndexOf('/') + 1);
 }
-                              
+
 /**
  * Gets the URL of the page running the script
  * @function getMyURL
@@ -92,7 +113,7 @@ function createCookie(name, value, hours, domainName) {
         var date = new Date();
         date.setTime(date.getTime() + (hours * 60 * 60 * 1000));
         expires = "; expires=" + date.toGMTString();
-        domain = ";domain=" + domainName;       
+        domain = ";domain=" + domainName;
     } else {
         expires = "";
         domain = ";domain=" + domainName;
@@ -135,7 +156,7 @@ return value;
 }
 
 /**
- * Gets the value stored in the Local session store. Using the key specified by 
+ * Gets the value stored in the Local session store. Using the key specified by
  * @function getLocal
  * @param {type} storageKey The key of the value to retrive
  * @returns {type} data The value of the value retrieved
@@ -289,7 +310,7 @@ ajax.send = function(url, callback, method, data, contentType, sessionCookieName
     };
     x.setRequestHeader('Content-type', contentType);
     if (tokenId && sessionCookieName) {
-       x.setRequestHeader(sessionCookieName, tokenId); 
+       x.setRequestHeader(sessionCookieName, tokenId);
     }
     x.send(data);
 };
@@ -302,7 +323,7 @@ ajax.authenticate = function (url, callback, data, headers, sync) {
                 callback(x.responseText, x.getAllResponseHeaders());
         }
     };
-    
+
     try {
         x.open('POST', url, false);
     } catch (err) {
@@ -338,15 +359,15 @@ ajax.post = function(url, data, callback, contentType, sync) {
  * @function openamConfig
  * @param {Object} options - The OpenAM Configuration JSON object.
  * <pre>
- *  Here an example.  
+ *  Here an example.
  *  {
  *       baseurl: "http://openam1.example.com:8080/openam",
- *       realm: "/",                                        // optional    
- *       cachetime: 3,                                      // optional 
+ *       realm: "/",                                        // optional
+ *       cachetime: 3,                                      // optional
  *       debugenabled: true                                 // optional
- *  }   
+ *  }
  * </pre>
- * @param {String} options.baseurl - The URL where OpenAM is running, example: 
+ * @param {String} options.baseurl - The URL where OpenAM is running, example:
  *  "https://openam.example.com:443/openam"
  * @param {String} [options.realm=The default realm for the baseurl used] - Name
  *  of the realm to be used, example: "/"
@@ -362,7 +383,7 @@ function openamConfig(options) {
     if (options === undefined) {
         throw "Object configuration must be specified";
     }
-    
+
     if (Boolean(options.debugenabled)) {
         debugEnabled = true;
     }
@@ -388,7 +409,7 @@ function openamConfig(options) {
     this.sessionsURI = function() {
         return "/json/sessions";
     };
-    
+
     this.authenticationURI = function() {
         return "/json/authenticate";
     };
@@ -432,7 +453,7 @@ function openamConfig(options) {
     this.authValueParam = function() {
         return "authIndexValue";
     };
-    
+
     // The Unique Identifier defined in OpenAM for the Identity, ususallly uid
     this.uniqueId = 'uid';
     // The value for the attribute defined by uniqueID. Initially empty.
@@ -525,7 +546,7 @@ function openamConfig(options) {
     this.authenticationURL = function (module, service, orealm) {
         debug("openamConfig.authenticationURL:OpenAM Base URL: " + options.baseurl);
         var realm_ = orealm || options.realm;
-        var authentication_url = options.baseurl + this.authenticationURI() + 
+        var authentication_url = options.baseurl + this.authenticationURI() +
                 "?" + this.realmParam() + "=" + realm_;
         if (module && module !== '') {
             if (authentication_url.indexOf("?") !== -1) {
@@ -568,7 +589,7 @@ function openamConfig(options) {
     };
 
     /*
-     * Provides the OpenAM authentication URL using the parameters configured 
+     * Provides the OpenAM authentication URL using the parameters configured
      * @param {String} tokenId - The token id that represents the OpenAM session
      * @returns {String} - Returns The URL of the logout endpoint for a modern OpenAM
      */
@@ -580,7 +601,7 @@ function openamConfig(options) {
     };
 
     /*
-     * Provides the OpenAM sessions URL using the parameters configured 
+     * Provides the OpenAM sessions URL using the parameters configured
      * @returns {String} - Returns The URL of the sessions endpoint for a modern OpenAM
      */
     this.sessionsURL = function () {
@@ -597,7 +618,7 @@ function openamConfig(options) {
  * @function authNRedirect
  * @param {Object} options - The configuration object to use
  * <pre>
- *  The options object is a JSON object, here an example.  
+ *  The options object is a JSON object, here an example.
  *  {
  *     openam: myOpenAMConfigObject,
  *     module: "DataStore",                                         // optional
@@ -606,14 +627,14 @@ function openamConfig(options) {
  *     gotoOnFail: "http://ap.example.com:8880/exampleNRO02.html",  // optional
  *     classic: false,                                              // optional
  *     windowed: true                                               // optional
- *  }   
+ *  }
  * </pre>
  * @param {Object|String} options.openam The OpenAM Configuration Object. This is
  *  a mandatory attribute. See openam.js documentation for more information
- * @param {String} [options.module=OpenAM realm default] The Authentication module 
+ * @param {String} [options.module=OpenAM realm default] The Authentication module
  *  to use in the left side of the login box.
  * @param {String} [options.service=OpenAM realm default] The Authentication service
- *  chain to use in the left side of the login box. Notice that service takes 
+ *  chain to use in the left side of the login box. Notice that service takes
  *  precedence over module.
  * @param {String} [options.gotoURL=Current page] The URL to go to after a
  *  successful authentication.
@@ -624,8 +645,8 @@ function openamConfig(options) {
  * @param {String} [options.windowed=true] Boolean attribute to specify if the
  *  redirect will happen in a pop-up window or not.
  */
-openamConfig.prototype.authNRedirect = function (options) 
-{                                                 
+openamConfig.prototype.authNRedirect = function (options)
+{
     var redirectURL = "";
     var myURL = encodeURIComponent(getMyURL());
     if (options) {
@@ -648,7 +669,7 @@ openamConfig.prototype.authNRedirect = function (options)
         service = '';
         debug("authNRedirect: service present:" + service);
     }
-    
+
     if (module) {
         if (!classic) {
             redirectURL = this.XUILoginURL() + realm_ + "&" + this.moduleParam() + "=" +
@@ -659,7 +680,7 @@ openamConfig.prototype.authNRedirect = function (options)
                     "&gotoOnFail=" + gotoOnFail;
         }
     }
-    
+
     if (service) {
         if (!classic) {
             redirectURL = this.XUILoginURL() + realm_ + "&" + this.serviceParam() + "=" +
@@ -670,17 +691,17 @@ openamConfig.prototype.authNRedirect = function (options)
                     "&gotoOnFail=" + gotoOnFail;
         }
     }
-    
+
     if (!module && !service) {
         if (!classic) {
-            redirectURL = this.XUILoginURL() + realm_ + 
+            redirectURL = this.XUILoginURL() + realm_ +
                     "&goto=" + gotoURL + "&gotoOnFail=" + gotoOnFail;
         } else {
-            redirectURL = this.loginURL() + "?" + this.realmParam() + "=" + realm_ + 
+            redirectURL = this.loginURL() + "?" + this.realmParam() + "=" + realm_ +
                     "&goto=" + gotoURL + "&gotoOnFail=" + gotoOnFail;
         }
     }
-    
+
     if (windowed) {
         openWindow(redirectURL, {height: 500});
     } else {
@@ -695,10 +716,10 @@ openamConfig.prototype.authNRedirect = function (options)
  * @returns {Boolean} - True if a user is authenticated
 */
 openamConfig.prototype.isUserAuthenticated = function () {
-    
+
     if (this.ssotoken() && this.ssotoken() !== '' && this.isSessionValid(this.ssotoken())) {
         debug("isUserAuthenticated: USER AUTHENTICATED");
-        return true;      
+        return true;
     } else {
         debug("isUserAuthenticated: USER NOT AUTHENTICATED");
         return false;
@@ -715,23 +736,23 @@ openamConfig.prototype.isSessionValid = function (tokenId) {
     var valid = false;
     var sessions_url = "";
     var response = null;
-    
+
     response = getLocal("validSession");
     debug("isSessionValid cached response: " + response);
     if (response) {
         var parsedR = JSON.parse(response);
-        valid = parsedR.valid; 
+        valid = parsedR.valid;
         this.Id = parsedR[this.uniqueId];
         if (valid && this.id) {
             return valid;
         }
     }
-    
+
     if (!this.legacyEnabled) {
         debug("isSessionValid: Legacy Mode Disabled");
         sessions_url = this.sessionsURL();
         ajax.post(sessions_url + "/" + tokenId + "?_action=validate",
-                  null,function(responseText) { 
+                  null,function(responseText) {
                       response = responseText;
                       },
                   'application/json');
@@ -762,30 +783,30 @@ openamConfig.prototype.isSessionValid = function (tokenId) {
  * @function authenticate
  * @param {Object} options - The configuration object to use
  * <pre>
- *  The options object is a JSON object, here an example.  
+ *  The options object is a JSON object, here an example.
  *  {
  *     module: "DataStore",                                         // optional
  *     service: "ldapService",                                      // optional
  *     realm: "/",                                                  // optional
  *     headers: "http://ap.example.com:8880/exampleNRO02.html",     // optional
  *     data: objectData                                             // optional
- *  }   
+ *  }
  * </pre>
- * @param {String} [options.module=OpenAM realm default] The Authentication module 
+ * @param {String} [options.module=OpenAM realm default] The Authentication module
  *  to use in the left side of the login box.
  * @param {String} [options.service=OpenAM realm default] The Authentication service
- *  chain to use in the left side of the login box. Notice that service takes 
+ *  chain to use in the left side of the login box. Notice that service takes
  *  precedence over module.
  * @param {String} [options.realm=The one configured in openam.js] Realm where the
  *   authentication will take place
  * @param {Object} options.headers - Object containing the credentials passed as headers
- * @param {Object} [options.data={}] - The payload to be submitted to the authentication 
- *  module 
- * 
+ * @param {Object} [options.data={}] - The payload to be submitted to the authentication
+ *  module
+ *
  */
 openamConfig.prototype.authenticate =  function (options) {
     if (!this.legacyEnabled) {
-        return this.authenticateWithModernOpenAM(options);      
+        return this.authenticateWithModernOpenAM(options);
     } else {
         return this.authenticateWithLegacyOpenAM(options);
     }
@@ -797,25 +818,25 @@ openamConfig.prototype.authenticate =  function (options) {
  *  authenticateWithModernOpenAM
  * @param {Object} options - The configuration object to use
  * <pre>
- *  The options object is a JSON object, here an example.  
+ *  The options object is a JSON object, here an example.
  *  {
  *     module: "DataStore",                                         // optional
  *     service: "ldapService",                                      // optional
  *     realm: "/",                                                  // optional
  *     headers: "http://ap.example.com:8880/exampleNRO02.html",     // optional
  *     data: objectData                                             // optional
- *  }   
+ *  }
  * </pre>
- * @param {String} [options.module=OpenAM realm default] The Authentication module 
+ * @param {String} [options.module=OpenAM realm default] The Authentication module
  *  to use in the left side of the login box.
  * @param {String} [options.service=OpenAM realm default] The Authentication service
- *  chain to use in the left side of the login box. Notice that service takes 
+ *  chain to use in the left side of the login box. Notice that service takes
  *  precedence over module.
  * @param {String} [options.realm=The one configured in openam.js] Realm where the
  *   authentication will take place
  * @param {Object} options.headers - Object containing the credentials passed as headers
- * @param {Object} [options.data={}] - The payload to be submitted to the authentication 
- *  module 
+ * @param {Object} [options.data={}] - The payload to be submitted to the authentication
+ *  module
  */
 openamConfig.prototype.authenticateWithModernOpenAM = function(options) {
     if (options) {
@@ -847,7 +868,7 @@ openamConfig.prototype.authenticateWithModernOpenAM = function(options) {
                 }, data, headers);
     } catch (err) {
         debug("authenticateWithModernOpenAM: " + err);
-    }    
+    }
     if (tokenId && tokenId.length !== 0) {
         createCookie(this.sessionCookieName(), tokenId, 3, this.domainName());
         debug("authenticateWithModernOpenAM: RESPONSE: " + response);
@@ -869,11 +890,11 @@ openamConfig.prototype.authenticateWithModernOpenAM = function(options) {
 /*
  *  Authenticates an identity using a one state authentication module.
  *  The version of the AM should support the /json/authenticate endpoint.
- *  The realm, module or service can be specified but only modules and services 
+ *  The realm, module or service can be specified but only modules and services
  *  with one state and  credentials passed in headers are supported at the moment
  * @param {Object} options - The configuration object to use
  * <pre>
- *  The options object is a JSON object, here an example.  
+ *  The options object is a JSON object, here an example.
  *  {
  *     module: "DataStore",                                         // optional
  *     service: "ldapService",                                      // optional
@@ -881,12 +902,12 @@ openamConfig.prototype.authenticateWithModernOpenAM = function(options) {
  *     realm: "/",                                                  // optional
  *     gotoURL: "https://app.example.com:8080/mypath",              // optional
  *     gotoOnFail: "https://app.example.com:8080/failed",           // optional
- *  }   
+ *  }
  * </pre>
- * @param {String} [options.module=OpenAM realm default] The Authentication module 
+ * @param {String} [options.module=OpenAM realm default] The Authentication module
  *  to use in the left side of the login box.
  * @param {String} [options.service=OpenAM realm default] The Authentication service
- *  chain to use in the left side of the login box. Notice that service takes 
+ *  chain to use in the left side of the login box. Notice that service takes
  *  precedence over module.
  * @param {String} [options.realm=The one configured in openam.js] Realm where the
  *   authentication will take place
@@ -904,7 +925,7 @@ openamConfig.prototype.authenticateWithModernOpenAM = function(options) {
 //        window.location = gotoURL;
 //    } else {
 //        if (gotoOnFail) {
-//           window.location = gotoOnFail; 
+//           window.location = gotoOnFail;
 //        } else {
 //            throw("Authentication failed");
 //        }
@@ -912,16 +933,16 @@ openamConfig.prototype.authenticateWithModernOpenAM = function(options) {
 //};
 
 /**
- *  Authenticates an identity using a one state authentication module by using 
+ *  Authenticates an identity using a one state authentication module by using
  *   the values submitted either in the form containing username and password or
  *   by using credentials submitted in the headers object.
  *  The version of the AM should support the /json/authenticate endpoint.
- *  The realm, module or service can be specified but only modules and services 
+ *  The realm, module or service can be specified but only modules and services
  *  with one state are supported.
  * @function authenticateSimple
  * @param {Object} options - The configuration object to use
  * <pre>
- *  The options object is a JSON object, here an example.  
+ *  The options object is a JSON object, here an example.
  *  {
  *     module: "DataStore",                                         // optional
  *     service: "ldapService",                                      // optional
@@ -931,12 +952,12 @@ openamConfig.prototype.authenticateWithModernOpenAM = function(options) {
  *     realm: "/",                                                  // optional
  *     gotoURL: "https://app.example.com:8080/mypath",              // optional
  *     gotoOnFail: "https://app.example.com:8080/failed",           // optional
- *  }   
+ *  }
  * </pre>
- * @param {String} [options.module=OpenAM realm default] The Authentication module 
+ * @param {String} [options.module=OpenAM realm default] The Authentication module
  *  to use in the left side of the login box.
  * @param {String} [options.service=OpenAM realm default] The Authentication service
- *  chain to use in the left side of the login box. Notice that service takes 
+ *  chain to use in the left side of the login box. Notice that service takes
  *  precedence over module.
  * @param {String} [options.username='username'] The id of the field that
  *  contains the username in the form. Either username and password or headers
@@ -986,35 +1007,35 @@ openamConfig.prototype.authenticateSimple = function (options) {
 
 /*
  * Authenticates an identity using username/password.
- * The realm, module or service can be specified but only modules and services 
- * with username/password are supported at the moment. 
+ * The realm, module or service can be specified but only modules and services
+ * with username/password are supported at the moment.
  * NOTE: This function is not implemented!
  * @param {Object} options - The configuration object to use
  * <pre>
- *  The options object is a JSON object, here an example.  
+ *  The options object is a JSON object, here an example.
  *  {
  *     module: "DataStore",                                         // optional
  *     service: "ldapService",                                      // optional
  *     realm: "/",                                                  // optional
  *     headers: "http://ap.example.com:8880/exampleNRO02.html",     // optional
  *     data: objectData                                             // optional
- *  }   
+ *  }
  * </pre>
- * @param {String} [options.module=OpenAM realm default] The Authentication module 
+ * @param {String} [options.module=OpenAM realm default] The Authentication module
  *  to use in the left side of the login box.
  * @param {String} [options.service=OpenAM realm default] The Authentication service
- *  chain to use in the left side of the login box. Notice that service takes 
+ *  chain to use in the left side of the login box. Notice that service takes
  *  precedence over module.
  * @param {String} [options.realm=The one configured in openam.js] Realm where the
  *   authentication will take place
  * @param {Object} options.headers - Object containing the credentials passed as headers
- * @param {Object} [options.data={}] - The payload to be submitted to the authentication 
- *  module  
+ * @param {Object} [options.data={}] - The payload to be submitted to the authentication
+ *  module
 */
 openamConfig.prototype.authenticateWithLegacyOpenAM = function(options) {
     var tokenId = null;
     return tokenId;
-    
+
     // TO DO: Complete this
 };
 
@@ -1023,12 +1044,12 @@ openamConfig.prototype.authenticateWithLegacyOpenAM = function(options) {
  * @function getIdentityAttributes
  * @param {Object} options - The configuration object to get the attributes
  * <pre>
- *  The options object is a JSON object, here an example.  
+ *  The options object is a JSON object, here an example.
  *  {
- *     attributes: "cn, givenName,sn,mail",          
+ *     attributes: "cn, givenName,sn,mail",
  *     realm: "/",                          // optional
  *     prettyprint: true                    // optional
- *  }   
+ *  }
  * </pre>
  *  @param {String} options.attributes Comma separated list of attributes
  *  @param {String} [options.realm=The one configured in openam.js] Realm where
@@ -1037,30 +1058,30 @@ openamConfig.prototype.authenticateWithLegacyOpenAM = function(options) {
  * @returns {JSON} - Returns the value of the profile attributes requested from the OpenAM
  */
 openamConfig.prototype.getIdentityAttributes = function (options) {
-    
+
     if (options) {
         var pprint_ = options.prettyprint || false;
         var realm = options.realm || this.realm();
     } else {
         throw("getIdentityAttributes: ERROR: Missing configuration parameter");
     }
-    
+
     var response = null;
     if (this.cacheEnabled) {
         var data = getLocal("attributes");
         if (data) return data;
-    }   
-    
-    var tokenId = this.ssotoken();   
+    }
+
+    var tokenId = this.ssotoken();
     if (this.isSessionValid(tokenId)) {
         if (!this.legacyEnabled) {
             debug("getIdentityAttributes: LEGACY NOT ENABLED");
-            response = this.getAttributesFromModernOpenAM(tokenId, options.attributes, realm, pprint_);   
+            response = this.getAttributesFromModernOpenAM(tokenId, options.attributes, realm, pprint_);
         } else {
             debug("getIdentityAttributes: LEGACY ENABLED");
             response = this.getAttributesFromLegacyOpenAM(tokenId, options.attributes, realm, pprint_);
         }
-    }    
+    }
     if (response && this.cacheEnabled) {
         var jresponse = JSON.parse(response);
         if (jresponse.code) {
@@ -1082,7 +1103,7 @@ openamConfig.prototype.getIdentityAttributes = function (options) {
  * @returns {JSON} - Returns the value of the profile attributes requested from the OpenAM
  */
 openamConfig.prototype.getAttributesFromModernOpenAM = function (tokenId, attributes, realm, pprint) {
- 
+
     var response = null;
     var attributes_url=this.attributesURL(realm);
     var response = null;
@@ -1094,9 +1115,9 @@ openamConfig.prototype.getAttributesFromModernOpenAM = function (tokenId, attrib
     var url = attributes_url + this.Id + "?_fields=" + encodeURIComponent(attributes) + pprintStr;
     debug("getAttributesFromModernOpenAM: full url: " + url);
     ajax.get(url,
-             function(responseText) { 
+             function(responseText) {
                         response = responseText;
-                      }, 
+                      },
                       'application/json', this.sessionCookieName(), tokenId);
     debug("getAttributesFromModernOpenAM. Attributes: " + response);
     return response;
@@ -1123,11 +1144,11 @@ openamConfig.prototype.getAttributesFromLegacyOpenAM = function (tokenId, attrib
  * @function logout
  * @param {Object} [options] - The object describing the options for the logout
  * <pre>
- *  The options object is a JSON object, here an example.  
+ *  The options object is a JSON object, here an example.
  *  {
  *     gotoURL: "https://app.example.com:8080/mypath",              // optional
  *     gotoOnFail: "https://app.example.com:8080/failed",           // optional
- *  }   
+ *  }
  * </pre>
  *  @param {String} [options.gotoURL=Current page] The URL to go to after a
  *   successful authentication.
@@ -1167,25 +1188,23 @@ openamConfig.prototype.logout = function (options) {
 openamConfig.prototype.logoutWithModernOpenAM = function () {
     var logoutSuccess = false;
     var tokenId = this.ssotoken();
-    var logout_url = this.logoutURL();
+    var logout_url = this.logoutURL(tokenId);
     var response = undefined;
     debug("logoutWithModernOpenAM: AUTHN URL: " + logout_url);
     ajax.send(logout_url,
-        function(responseText) { 
+        function(responseText) {
             response = responseText;
         }, "POST", "{}", "application/json", this.sessionCookieName(), tokenId);
     debug("logoutWithModernOpenAM: Response: " + response);
+    deleteCookie(this.sessionCookieName(), this.domainName());
+    deleteCookie(this.aMAuthCookie, this.domainName());
     if ( response ) {
-        deleteCookie(this.sessionCookieName(), this.domainName());
-        deleteCookie(this.aMAuthCookie, this.domainName());
         logoutSuccess = true;
     } else {
-        deleteCookie(this.sessionCookieName(), this.domainName());
-        deleteCookie(this.aMAuthCookie, this.domainName());
         logoutSuccess = false;
     }
     removeAllLocal();
-    debug("logoutWithModernOpenAM: logout result: " + logoutSuccess);                      
+    debug("logoutWithModernOpenAM: logout result: " + logoutSuccess);
     return logoutSuccess;
 };
 

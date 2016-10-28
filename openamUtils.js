@@ -1,17 +1,38 @@
-/* 
-* The contents of this file are subject to the terms of the Common Development and
- * Distribution License (the License). You may not use this file except in compliance with the
+/*
+ * Copyright © 2016 ForgeRock, AS.
+ *
+ * This is unsupported code made available by ForgeRock for community development
+ * subject to the license detailed below. The code is provided on an "as is" basis,
+ * without warranty of any kind, to the fullest extent permitted by law.
+ *
+ * ForgeRock does not warrant or guarantee the individual success developers may
+ * have in implementing the code on their development platforms or in production
+ * configurations.
+ *
+ * ForgeRock does not warrant, guarantee or make any representations regarding the
+ * use, results of use, accuracy, timeliness or completeness of any data or
+ * information relating to the alpha release of unsupported code. ForgeRock
+ * disclaims all warranties, expressed or implied, and in particular, disclaims all
+ * warranties of merchantability, and warranties related to the code, or any
+ * service or software related thereto.
+ *
+ * ForgeRock shall not be liable for any direct, indirect or consequential damages
+ * or costs of any type arising out of any action taken by you or others related to
+ * the code.
+ *
+ * The contents of this file are subject to the terms of the Common Development and
+ * Distribution License (the License). You may not use this file except in
+ * compliance with the License.
+ *
+ * You can obtain a copy of the License at https://forgerock.org/cddlv1-0/. See the
+ * License for the specific language governing permission and limitations under the
  * License.
  *
- * You can obtain a copy of the License at legal/CDDLv1.0.txt. See the License for the
- * specific language governing permission and limitations under the License.
- *
- * When distributing Covered Software, include this CDDL Header Notice in each file and include
- * the License file at legal/CDDLv1.0.txt. If applicable, add the following below the CDDL
- * Header, with the fields enclosed by brackets [] replaced by your own identifying
- * information: "Portions copyright [year] [name of copyright owner]".
- *
- * Copyright 2014-2016 ForgeRock AS.
+ * When distributing Covered Software, include this CDDL Header Notice in each file
+ * and include the License file at https://forgerock.org/cddlv1-0/. If applicable,
+ * add the following below the CDDL Header, with the fields enclosed by brackets []
+ * replaced by your own identifying information: "Portions copyright [year] [name
+ * of copyright owner]".
  */
 
 /* Some useful tools to combine with openam.js
@@ -21,11 +42,11 @@
  * Notice: This wrapper is not supported/maintained/endorsed by ForgeRock
  */
 
- 
+
 /**
  * Prints the Welcome message for the "identity" and the logout button in a div
  * @function printWelcomeAndLogout
- * @param {String} element 
+ * @param {String} element
  * @param {Object} options The object containing the configuration for this function
  * <pre>
  * Example:
@@ -36,8 +57,8 @@
  * </pre>
  * @param {Object} options.openam - The OpenAM Configuration Object. This is
  *  a mandatory attribute. See openam.js documentation for more information
- * @param {String} options.message - The message to be shown as Welcome to the 
- *  user/identity 
+ * @param {String} options.message - The message to be shown as Welcome to the
+ *  user/identity
  * @returns {undefined} Does not return anything. It overrides the element DOM
  */
 function printWelcome(element, options) {
@@ -69,7 +90,7 @@ function middleBar() {
     var row2 = table1.insertRow();
     var cell2 = row2.insertCell();
     cell2.style.cssText = "height: 60px; border-right: 2px solid #dcd808;";
-    cell2.innerHTML = "&nbsp;";   
+    cell2.innerHTML = "&nbsp;";
     return table1;
 }
 
@@ -88,7 +109,7 @@ function authenticateUser(options) {
     var openamConn = options.openam;
     var response = options.data;
     var jsonResp = null;
-    
+
     if (response) {
         jsonResp = JSON.parse(response);
         for (var callback in jsonResp.callbacks) {
@@ -100,7 +121,7 @@ function authenticateUser(options) {
         }
         options.data = JSON.stringify(jsonResp);
     }
-    
+
     var response2 = openamConn.authenticate(options);
     if (response2) {
         try {
@@ -108,7 +129,7 @@ function authenticateUser(options) {
         } catch (ex1) {
             window.location = gotoURL;
             return false;
-        }       
+        }
     } else {
         document.getElementById("errorMessage").innerHTML = 'The authentication failed';
         options.data = null;
@@ -120,7 +141,7 @@ function authenticateUser(options) {
         addListener(newForma, options);
         return false;
     }
-    
+
     if (jsonResp.authId) {
         options.data = response2;
         var td1 = document.getElementById("td1");
@@ -151,7 +172,7 @@ function formShow(show) {
         document.getElementById("login1").style.display = "block";
         document.getElementById("flip").style.display = "none";
         document.getElementById("cross").style.display = "block";
-        
+
     } else {
         document.getElementById("login1").style.display = "none";
         document.getElementById("flip").style.display = "block";
@@ -163,7 +184,7 @@ function formShow(show) {
  * Add the social modules buttons represented by the comma separated list
  * @function addSocial
  * @param {Object} options - An object containing the options to use. This could be the OOTB
- *  socialImplementations that come when querying the OpenAM serverinfo URL or a 
+ *  socialImplementations that come when querying the OpenAM serverinfo URL or a
  *  manually described object that should be called overrideSocialImplementations.
  * @returns {String} Returns a table with the buttons
  */
@@ -177,22 +198,22 @@ function addSocial(options) {
         debug("There was no options for the addSocial method");
         return;
     }
-    
+
     var formId = options.formId || "amLoginForm";
     options.formId = formId;
-    
+
     var myTable = createTable({ id: "intTable", width: "100%"} );
     myTable.style.height = "auto";
     var tableBody = document.createElement('TBODY');
-    myTable.appendChild(tableBody);  
+    myTable.appendChild(tableBody);
     row1 = myInsertRow(myTable,'Use your social media account:', {align: "center"});
-    
+
     // Clean OAuth2 Cookies
-    deleteCookie("ORIG_URL", openam.domainName());  
+    deleteCookie("ORIG_URL", openam.domainName());
     deleteCookie("PROXY_URL", openam.domainName());
-    
+
     var services = null;
-    
+
     if (overrideSocialImplementations) {
         services = overrideSocialImplementations;
         var baseURL = '';
@@ -203,8 +224,8 @@ function addSocial(options) {
         imgStyle = "min-width: 24px; width: 24px; max-width: 100px" +
                 " min-height: 24px; height: 24px; max-height: 45px;";
     }
-    
-    for (var instance in services) {      
+
+    for (var instance in services) {
         if (services[instance].valid === undefined || Boolean(services[instance].valid)) {
             var tr = document.createElement('TR');
             var td = myInsertCell(tr, '', {align: "center"});
@@ -268,7 +289,7 @@ function createTable(properties) {
         myTable[prop] = properties[prop];
     }
     return myTable;
-}    
+}
 
 /*
  * Inserts a row to the table myTable with rowProps and cellProps
@@ -321,7 +342,7 @@ function myInsertCell(row, data, cellProps) {
  */
 function FROATH(jsonResp, callback, myTable) {
     var newRow,newCell,inputElem;
-    if (jsonResp.callbacks[callback].type === "ConfirmationCallback" && 
+    if (jsonResp.callbacks[callback].type === "ConfirmationCallback" &&
             (jsonResp.stage === "AuthenticatorOATH4" ||
              jsonResp.stage === "AuthenticatorOATH7")) {
         newRow = myTable.insertRow();
@@ -348,23 +369,23 @@ function FROATH(jsonResp, callback, myTable) {
             inputElem.type = "submit";
             inputElem.value = jsonResp.callbacks[callback].output[2].value[index];
             newCell.appendChild(inputElem);
-            inputElem.onclick = function() { 
+            inputElem.onclick = function() {
                 var name1 = this.name;
                 var name2 = name1.substring(name1.indexOf('_')+1);
                 var inputHidden = document.createElement('INPUT');
                 inputHidden.name = jsonResp.callbacks[callback].input[0].name;
-                inputHidden.value = name2; 
+                inputHidden.value = name2;
                 this.appendChild(inputHidden);
             };
             index += 1;
         }
     }
-    if (jsonResp.stage === "AuthenticatorOATH5" && 
+    if (jsonResp.stage === "AuthenticatorOATH5" &&
             jsonResp.callbacks[callback].type === "TextOutputCallback") {
         if (jsonResp.callbacks[callback].output[1].value === '0') {
             myInsertRow(myTable, jsonResp.callbacks[callback].output[0].value);
         }
-        if (jsonResp.callbacks[callback].output[1].value === '4') {     
+        if (jsonResp.callbacks[callback].output[1].value === '4') {
             var theScript = jsonResp.callbacks[callback].output[0].value;
             var endPos = theScript.indexOf('version:') - 9;
             var texto = theScript.substring(theScript.indexOf('text:') + 7, endPos).trim();
@@ -382,7 +403,7 @@ function FROATH(jsonResp, callback, myTable) {
                 colorLight: "#ffffff",
                 correctLevel: QRCode.CorrectLevel.H
             });
-        }       
+        }
     }
     return myTable;
 }
@@ -402,7 +423,7 @@ function createForm(options) {
     myTable.style.height= "100%";
     myTable.style.verticalAlign = "middle";  // or top?
     var jsonResp = null;
-    
+
     if (options.data) {
         jsonResp = JSON.parse(options.data);
         response = options.data;
@@ -421,8 +442,8 @@ function createForm(options) {
         jsonResp = JSON.parse(response);
         options.data = response;
     }
-    
-    if (jsonResp.authId) {      
+
+    if (jsonResp.authId) {
         if (jsonResp.callbacks) {
             form.id = formId;
             form.method="post";
@@ -462,13 +483,13 @@ function createForm(options) {
                             myTable = FROATH(jsonResp, callback, myTable);
                             break;
                         }
-                        
+
                         break;
                     default:
                         type = "text";
                         break;
                 }
-                
+
                 if (jsonResp.callbacks[callback].input && jsonResp.callbacks[callback].input[0] &&
                         jsonResp.callbacks[callback].type !== "ConfirmationCallback") {
                     var newRow = myTable.insertRow();
@@ -479,14 +500,14 @@ function createForm(options) {
                     inputElem.placeholder = jsonResp.callbacks[callback].output[0].value;
                     inputElem.style.width = "100%";
                     if (jsonResp.callbacks[callback].input[0].value !== '') {
-                      inputElem.value = jsonResp.callbacks[callback].input[0].value;  
+                      inputElem.value = jsonResp.callbacks[callback].input[0].value;
                     }
                     inputElem.focus();
                     inputElem.required = true;
                     newCell.appendChild(inputElem);
                 }
             }
-            
+
             if (submitButton === 0) {
                 var newRow2 = myTable.insertRow();
                 var newCell2 = newRow2.insertCell();
@@ -500,7 +521,7 @@ function createForm(options) {
             }
         }
     }
-    form.appendChild(myTable);    
+    form.appendChild(myTable);
     return form;
 }
 
@@ -564,15 +585,15 @@ function createLoginDiv(options) {
     else {
         login1.style.cssText = "display: none; width: 300px; height: 220px;float: right;";
     }
-    
+
     var crossButton = document.createElement("a");
     crossButton.id ="cross";
     crossButton.className = "btn2";
     crossButton.style.display = "none";
     crossButton.style.cssFloat = "right";
-    crossButton.innerHTML = " &times; ";    
+    crossButton.innerHTML = " &times; ";
     login1.appendChild(crossButton);
-    
+
     var table1 = createTable({width: "95%"});
     table1.style.height = "60%";
     table1.style.verticalAlign = "top";
@@ -585,7 +606,7 @@ function createLoginDiv(options) {
     login1.appendChild(table1);
     var divError = document.createElement("div");
     divError.id="errorMessage";
-    login1.appendChild(divError);  
+    login1.appendChild(divError);
 
     if (openam && social) {
         var td2 = myInsertCell(row1,"&nbsp;",{id: "td2", width: "3%"});
@@ -593,7 +614,7 @@ function createLoginDiv(options) {
         td2.appendChild(middleBar());
         td3.appendChild(addSocial(options));
     }
-    
+
     document.body.appendChild(login1);
     crossButton.onclick = function () { formShow(false);};
     return login1;
@@ -603,12 +624,12 @@ function createLoginDiv(options) {
  * Renders a login button that can be clicked to create a login box. The login box
  * may contain the interactive login credentials area plus a social login buttons area
  * depending on the configuration of the "options" object and the configuration
- * of the OpenAM being used. 
+ * of the OpenAM being used.
  * @function printLoginBox
  * @param {HTMLElement|String} element - the DOM element object where the button will be rendered
  * @param {Object|String} options - The configuration object to use.
  * <pre>
- *  The options object is a JSON object, here an example.  
+ *  The options object is a JSON object, here an example.
  *  {
  *     openam: myOpenAMConfigObject,
  *     module: "DataStore",                                         // optional
@@ -619,18 +640,18 @@ function createLoginDiv(options) {
  *     gotoURL: "http://ap.example.com:8880/exampleNRO02.html",     // optional
  *     social: true,                                                // optional
  *     overrideSocialImplementations: mySocialImplementationsObject  // optional
- *  }   
+ *  }
  *  </pre>
  * @param {Object|String} options.openam The OpenAM Configuration Object. This is
  *  a mandatory attribute. See openam.js documentation for more information
- * @param {String} [options.module=OpenAM realm default] The Authentication module 
+ * @param {String} [options.module=OpenAM realm default] The Authentication module
  *  to use in the left side of the login box.
  * @param {String} [options.service=OpenAM realm default] The Authentication service
- *  chain to use in the left side of the login box. Notice that service takes 
+ *  chain to use in the left side of the login box. Notice that service takes
  *  precedence over module.
- * @param {String} [options.width=270px or as defined in openamUtils.css] The 
+ * @param {String} [options.width=270px or as defined in openamUtils.css] The
  *  Login Box width in px.
- * @param {String} [options.height=620px or as defined in openamUtils.css] The 
+ * @param {String} [options.height=620px or as defined in openamUtils.css] The
  *  Login Box height in px.
  * @param {String} [options.formId=amLoginForm] The id of the form to be used to
  *  capture the credentials. It is recommended not to change it, unless there is
@@ -642,7 +663,7 @@ function createLoginDiv(options) {
  *  show the social implementations in the login page.
  * @param {Object[]} [options.overrideSocialImplementations] This array of objects
  *  will override the socialImplementations array that is returned from the
- *  OpenAM serverinfo URL. 
+ *  OpenAM serverinfo URL.
  *  <pre>
  *  Here an example of the overrideSocialImplementations object:
  *  [
@@ -654,7 +675,7 @@ function createLoginDiv(options) {
  *          "valid": true,
  *          "buttonText": ''
  *      },
- *      {       
+ *      {
  *              "authnChain": "MicrosoftSocialAuthenticationService",
  *              "displayName": "Microsoft",
  *              "iconPath": "images/msn.png",
@@ -664,21 +685,21 @@ function createLoginDiv(options) {
  *      }
  *  ]
  *  </pre>
- *  @param {String} options.overrideSocialImplementations[].authnChain The name 
+ *  @param {String} options.overrideSocialImplementations[].authnChain The name
  *   of the authentication chain that implements the specified social authentication
- *  @param {String} options.overrideSocialImplementations[].displayName The name 
+ *  @param {String} options.overrideSocialImplementations[].displayName The name
  *   to be displayed for the specified social authentication
- *  @param {String} options.overrideSocialImplementations[].iconPath The location 
+ *  @param {String} options.overrideSocialImplementations[].iconPath The location
  *   of the icon to be displayed within the button for the specified social authentication
  *  @param {String} [options.overrideSocialImplementations[].imgStyle="float: left;"] The CSS style
  *   to be applied to the image referred in the iconPath attribute
- *  @param {Boolean} [options.overrideSocialImplementations[].valid=true] Flag to 
- *   specify if the socialImplementation object should be used or not 
- *  @param {String} [options.overrideSocialImplementations[].buttonText=Sign in with <displayName>] The text 
+ *  @param {Boolean} [options.overrideSocialImplementations[].valid=true] Flag to
+ *   specify if the socialImplementation object should be used or not
+ *  @param {String} [options.overrideSocialImplementations[].buttonText=Sign in with <displayName>] The text
  *   to be written within the button for the specified social authentication
  */
 function printLoginBox(element, options) {
-    
+
     if (typeof(element) === "string") {
         element = document.getElementById(element);
     }
@@ -690,11 +711,11 @@ function printLoginBox(element, options) {
     loginButton.innerHTML = "Login &#9660;";
 
     element.appendChild(loginButton);
-    
+
     loginButton.onclick = function () {
         if (!document.getElementById("login1")) {
             element.appendChild(createLoginDiv(options));
-        } 
+        }
         if (!document.getElementById(formId)) {
             var forma = createForm(options);
             addListener(forma, options);
@@ -708,15 +729,15 @@ function printLoginBox(element, options) {
 
 /**
  * Renders a logout button that will invoke the logout service when clicked
- * @function printLogoutButton 
- * @param {HTMLElement|String} element - the DOM element object where the button 
+ * @function printLogoutButton
+ * @param {HTMLElement|String} element - the DOM element object where the button
  *  will be rendered
  * @param {Object} options - The configuration object to use
  * <pre>
- *  The options object is a JSON object, here an example.  
+ *  The options object is a JSON object, here an example.
  *  {
  *     openam: myOpenAMConfigObject
- *  }   
+ *  }
  *  </pre>
  * @param {Object|String} options.openam The OpenAM Configuration Object. This is
  *  a mandatory attribute. See openam.js documentation for more information
@@ -745,7 +766,7 @@ function printLogoutButton(element, options) {
  * @param {HTMLElement|String} element - the DOM element object where the button will be rendered
  * @param {Object} options - The configuration object to use
  * <pre>
- *  The options object is a JSON object, here an example.  
+ *  The options object is a JSON object, here an example.
  *  {
  *     openam: myOpenAMConfigObject,
  *     module: "DataStore",                                         // optional
@@ -754,14 +775,14 @@ function printLogoutButton(element, options) {
  *     gotoOnFail: "http://ap.example.com:8880/exampleNRO02.html",  // optional
  *     classic: false                                               // optional
  *     windowed: true,                                              // optional
- *  }   
+ *  }
  * </pre>
  * @param {Object|String} options.openam The OpenAM Configuration Object. This is
  *  a mandatory attribute. See openam.js documentation for more information
- * @param {String} [options.module=OpenAM realm default] The Authentication module 
+ * @param {String} [options.module=OpenAM realm default] The Authentication module
  *  to use in the left side of the login box.
  * @param {String} [options.service=OpenAM realm default] The Authentication service
- *  chain to use in the left side of the login box. Notice that service takes 
+ *  chain to use in the left side of the login box. Notice that service takes
  *  precedence over module.
  * @param {String} [options.gotoURL=Current page] The URL to go to after a
  *  successful authentication.
@@ -775,11 +796,11 @@ function printLogoutButton(element, options) {
 function printLoginButton(element, options) {
     if (typeof(element) === "string") {
         element = document.getElementById(element);
-    }   
+    }
     if (options) {
         var openam = options.openam || undefined;
     }
-    
+
     loginButton = document.createElement("a");
     loginButton.id = "_flip";
     loginButton.className= "btn3";
